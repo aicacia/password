@@ -107,4 +107,8 @@ async function download(privateKey: PrivateKey, publicKey: Key) {
 
 if (browser) {
 	getKeys().then(([privateKey, publicKey]) => download(privateKey, publicKey));
+	remoteStorage.on('sync-done', async () => {
+		const [privateKey, publicKey] = await getKeys();
+		download(privateKey, publicKey);
+	});
 }
