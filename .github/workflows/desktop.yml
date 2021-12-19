@@ -1,0 +1,43 @@
+name: Desktop
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    env:
+      VITE_SUPABASE_URL: https://crzevxurexryajxytyst.supabase.co
+      VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzOTUwNDIxMywiZXhwIjoxOTU1MDgwMjEzfQ.Qh2VFbHH7P7mVlI5oGG1b_Ey0LwjcUJmXJjJJEUZoRc
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y webkit2gtk-4.0
+      - run: npm install -g npm@8.1.2
+      - run: npm ci
+      - run: npm run desktop.build
+      - id: tag
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: '${{ steps.tag.outputs.sha_short }}'
+          releaseName: 'WordGames ${{ steps.tag.outputs.sha_short }}'
+          body: See the assets to download this version and install.
+          draft: false
+          prerelease: false

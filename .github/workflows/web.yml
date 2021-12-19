@@ -1,0 +1,33 @@
+name: Web
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    env:
+      USE_BASE_PATH: true
+      VITE_SUPABASE_URL: https://crzevxurexryajxytyst.supabase.co
+      VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzOTUwNDIxMywiZXhwIjoxOTU1MDgwMjEzfQ.Qh2VFbHH7P7mVlI5oGG1b_Ey0LwjcUJmXJjJJEUZoRc
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - run: npm install -g npm@8.1.2
+      - run: npm ci
+      - run: npm run web.build
+      - uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: '/service-worker.js'
+          replace: '/password/service-worker.js'
+          include: '**/*.html'
+          regex: false
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
