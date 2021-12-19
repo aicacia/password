@@ -3,6 +3,7 @@
 	import { passwords, setPassword } from '$lib/state/passwords';
 	import Modal from './Modal.svelte';
 	import Password from './Password.svelte';
+	import { base } from '$app/paths';
 
 	let app: string;
 	let username: string;
@@ -12,7 +13,10 @@
 	let open = false;
 </script>
 
-<button class="btn primary" on:click={() => (open = !open)}>Add</button>
+<div class="flex justify-between mb-2">
+	<button class="btn primary" on:click={() => (open = !open)}>Add</button>
+	<a class="btn primary" href={`${base}/keys`}>Keys</a>
+</div>
 
 <Modal bind:open>
 	<input class="input mt-1" type="text" placeholder="Application" bind:value={app} />

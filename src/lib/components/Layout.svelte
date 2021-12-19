@@ -1,13 +1,12 @@
 <script lang="ts">
-	import Nav from './Nav.svelte';
+	import RemoteStorage from './RemoteStorage.svelte';
 	import Notifications from './Notifications.svelte';
 </script>
 
-<div class="h-screen w-screen bg-gray-50 flex flex-col">
-	<Nav />
-	<div class="container mx-auto h-full">
+<div class="h-screen w-screen bg-gray-50 flex flex-col overflow-auto">
+	<div class="container mx-auto h-full my-8">
 		<slot />
 	</div>
+	<RemoteStorage />
+	<Notifications />
 </div>
-
-<Notifications />

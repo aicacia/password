@@ -10,8 +10,6 @@
 	});
 </script>
 
-<nav class="relative h-16">
-	<div class="absolute inset-y-0 right-0 z-10">
-		<div id="remote-storage-widget" />
-	</div>
-</nav>
+<div class="absolute left-0 bottom-0">
+	<div id="remote-storage-widget" />
+</div>

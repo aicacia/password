@@ -36,20 +36,7 @@ export async function createKey() {
 			format: 'armored'
 		});
 
-		const [privateKey, publicKey] = await Promise.all([
-			readPrivateKey({ armoredKey: privateKeyArmored }),
-			readKey({ armoredKey: publicKeyArmored }),
-			localforage.setItem('privateKey', privateKeyArmored),
-			localforage.setItem('publicKey', publicKeyArmored)
-		]);
-
-		writableKeys.update((state) => {
-			state.privateKey = privateKey;
-			state.publicKey = publicKey;
-			return state;
-		});
-
-		emitter.emit('ready');
+		await setKeys(privateKeyArmored, publicKeyArmored);
 	} finally {
 		writableKeys.update((state) => {
 			state.loaded = false;
@@ -57,6 +44,35 @@ export async function createKey() {
 			return state;
 		});
 	}
+}
+
+export async function setKeys(privateKeyArmored: string, publicKeyArmored: string, save = true) {
+	const tasks: Promise<Key | string>[] = [
+		readPrivateKey({ armoredKey: privateKeyArmored }),
+		readKey({ armoredKey: publicKeyArmored })
+	];
+
+	if (save) {
+		tasks.push(
+			localforage.setItem('privateKey', privateKeyArmored),
+			localforage.setItem('publicKey', publicKeyArmored)
+		);
+	}
+
+	const [privateKey, publicKey] = await Promise.all([
+		readPrivateKey({ armoredKey: privateKeyArmored }),
+		readKey({ armoredKey: publicKeyArmored }),
+		localforage.setItem('privateKey', privateKeyArmored),
+		localforage.setItem('publicKey', publicKeyArmored)
+	]);
+
+	writableKeys.update((state) => {
+		state.privateKey = privateKey;
+		state.publicKey = publicKey;
+		return state;
+	});
+
+	emitter.emit('ready');
 }
 
 export function getKeys(): Promise<[privateKey: PrivateKey, publicKey: Key]> {
@@ -80,18 +96,7 @@ if (browser) {
 		localforage.getItem<string>('publicKey')
 	]).then(async ([privateKeyArmored, publicKeyArmored]) => {
 		try {
-			const [privateKey, publicKey] = await Promise.all([
-				readPrivateKey({ armoredKey: privateKeyArmored }),
-				readKey({ armoredKey: publicKeyArmored })
-			]);
-
-			writableKeys.update((state) => {
-				state.privateKey = privateKey;
-				state.publicKey = publicKey;
-				return state;
-			});
-
-			emitter.emit('ready');
+			await setKeys(privateKeyArmored, publicKeyArmored, false);
 		} finally {
 			writableKeys.update((state) => {
 				state.loaded = true;
