@@ -1,28 +1,27 @@
-const timestamp = 1639954236057;
+const timestamp = 1640046960310;
 const build = [
-  "/password/_app/start-48686d0a.js",
+  "/password/_app/start-90f15585.js",
   "/password/_app/assets/start-d5b4de3e.css",
-  "/password/_app/pages/__layout.svelte-c6c1da12.js",
-  "/password/_app/assets/pages/__layout.svelte-037a3c57.css",
-  "/password/_app/error.svelte-f6ef2d49.js",
-  "/password/_app/pages/index.svelte-278cf60b.js",
-  "/password/_app/pages/passwords.svelte-b5f5e5f0.js",
-  "/password/_app/pages/keys.svelte-eb04b6c2.js",
-  "/password/_app/chunks/vendor-f23cb189.js",
+  "/password/_app/pages/__layout.svelte-2e153bf7.js",
+  "/password/_app/assets/pages/__layout.svelte-971ebb93.css",
+  "/password/_app/error.svelte-5b8b3755.js",
+  "/password/_app/pages/index.svelte-280f216d.js",
+  "/password/_app/pages/passwords.svelte-ab9d88c9.js",
+  "/password/_app/pages/keys.svelte-1e35ebcd.js",
+  "/password/_app/chunks/vendor-cf18c955.js",
+  "/password/_app/assets/vendor-86f8c920.css",
   "/password/_app/chunks/singletons-12a22614.js",
   "/password/_app/chunks/paths-28a87002.js",
   "/password/_app/chunks/preload-helper-04e99934.js",
-  "/password/_app/chunks/keys-ac9139ce.js",
-  "/password/_app/chunks/Modal-4ba55855.js",
+  "/password/_app/chunks/keys-b9524687.js",
+  "/password/_app/chunks/Modal-76280f12.js",
   "/password/_app/chunks/widget-3e963cc8.js"
 ];
 const files = [
   "/password/favicon.png",
-  "/password/hidden.svg",
   "/password/icon.png",
   "/password/manifest.json",
-  "/password/robots.txt",
-  "/password/visible.svg"
+  "/password/robots.txt"
 ];
 const CACHE_NAME = `static-cache-v${timestamp}`;
 const FILES_TO_CACHE = [...build, ...files];
