@@ -1,19 +1,33 @@
 <script lang="ts">
-	import { base } from '$app/paths';
-	import { deletePassword, setPassword } from '$lib/state/passwords';
-	import Modal from './Modal.svelte';
+	import FaEye from 'svelte-icons/fa/FaEye.svelte';
+	import FaEyeSlash from 'svelte-icons/fa/FaEyeSlash.svelte';
+	import { debounce } from '@aicacia/debounce';
+	import { updatePassword } from '$lib/state/passwords';
 
-	export let app: string;
+	export let id: string;
+	export let url: string;
 	export let username: string;
 	export let password: string;
+	export let onDelete: (id: string) => void = () => undefined;
 
-	let open = false;
 	let showPassword = false;
+
+	const debouncedUpdate = debounce(() => {
+		if (url && username && password) {
+			updatePassword(id, url, username, password);
+		}
+	}, 500);
 </script>
 
 <div class="flex">
 	<div class="relative flex-1">
-		<input class="input h-full" type="text" placeholder="Username" bind:value={username} />
+		<input
+			class="input h-full"
+			type="text"
+			placeholder="Username"
+			bind:value={username}
+			on:input={debouncedUpdate}
+		/>
 	</div>
 	<div class="relative flex-1">
 		<input
@@ -22,6 +36,7 @@
 			type="text"
 			placeholder="Password"
 			bind:value={password}
+			on:input={debouncedUpdate}
 		/>
 		<input
 			class="input h-full"
@@ -29,25 +44,22 @@
 			type="password"
 			placeholder="Password"
 			bind:value={password}
+			on:input={debouncedUpdate}
 		/>
 		<button
 			class="text-black absolute top-0 bottom-0 right-2"
 			on:click={() => (showPassword = !showPassword)}
 		>
-			{#if showPassword}
-				<img class="w-6 h-6" src={`${base}/visible.svg`} alt="Hide" />
-			{:else}
-				<img class="w-6 h-6" src={`${base}/hidden.svg`} alt="Show" />
-			{/if}
+			<div class="w-6 h-6">
+				{#if showPassword}
+					<FaEye />
+				{:else}
+					<FaEyeSlash />
+				{/if}
+			</div>
 		</button>
 	</div>
 	<div class="relative flex-grow-0">
-		<button class="btn danger px-4" on:click={() => (open = !open)}>×</button>
+		<button class="btn danger px-4" on:click={() => onDelete(id)}>×</button>
 	</div>
 </div>
-
-<Modal bind:open>
-	<h3 slot="title">Deleting Password</h3>
-	<p class="mb-2">Delete {app} {username} Password?</p>
-	<button class="btn danger" on:click={() => deletePassword(app, username)}>Delete</button>
-</Modal>

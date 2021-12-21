@@ -36,11 +36,15 @@
 <script lang="ts">
 	import type { Key, PrivateKey } from 'openpgp';
 	import { keys, setKeys } from '$lib/state/keys';
+	import FaEye from 'svelte-icons/fa/FaEye.svelte';
+	import FaEyeSlash from 'svelte-icons/fa/FaEyeSlash.svelte';
 	import Modal from './Modal.svelte';
 	import { base } from '$app/paths';
 
 	let importOpen = false;
 	let importing = false;
+	let publicKeyShow = false;
+	let privateKeyShow = false;
 	let publicKey: string;
 	let privateKey: string;
 
@@ -89,17 +93,51 @@
 	>
 </Modal>
 
-<div class="grid grid-cols-2 gap-2">
-	<div>
-		<h1 class="border-b">Public Key</h1>
-		<pre>
-			{$keys.publicKey?.armor()}
+<div class="grid lg:grid-cols-2 grid-cols-1 gap-2">
+	{#if $keys.publicKey?.armor()}
+		<div>
+			<h1 class="border-b">
+				Public Key
+				<button class="btn primary" on:click={() => (publicKeyShow = !publicKeyShow)}>
+					<div class="w-6 h-6">
+						{#if publicKeyShow}
+							<FaEye />
+						{:else}
+							<FaEyeSlash />
+						{/if}
+					</div>
+				</button>
+			</h1>
+			<pre class="overflow-auto" class:hidden={!publicKeyShow}>
+			<code>
+				{$keys.publicKey?.armor()}
+			</code>
 		</pre>
-	</div>
-	<div>
-		<h1 class="border-b">Private Key</h1>
-		<pre>
-			{$keys.privateKey?.armor()}
+		</div>
+	{:else}
+		<h1>No Public Key</h1>
+	{/if}
+	{#if $keys.privateKey?.armor()}
+		<div>
+			<h1 class="border-b">
+				Private Key
+				<button class="btn primary" on:click={() => (privateKeyShow = !privateKeyShow)}>
+					<div class="w-6 h-6">
+						{#if privateKeyShow}
+							<FaEye />
+						{:else}
+							<FaEyeSlash />
+						{/if}
+					</div>
+				</button>
+			</h1>
+			<pre class="overflow-auto" class:hidden={!privateKeyShow}>
+			<code>
+				{$keys.privateKey?.armor()}
+			</code>
 		</pre>
-	</div>
+		</div>
+	{:else}
+		<h1>No Private Key</h1>
+	{/if}
 </div>

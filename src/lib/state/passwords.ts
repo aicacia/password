@@ -1,47 +1,73 @@
 import { derived, get } from 'svelte/store';
 import { writable } from 'svelte/store';
 import type { PrivateKey, Key } from 'openpgp';
+import { v4 } from 'uuid';
 import { encrypt, decrypt, createMessage, readMessage } from 'openpgp';
 import { getKeys } from './keys';
 import { remoteStorage } from './remotestorage';
 import { browser } from '$app/env';
 
+export interface IPassword {
+	id: string;
+	url: string;
+	username: string;
+	password: string;
+}
+
 export interface IPasswords {
-	[app: string]: {
-		[username: string]: string;
-	};
+	[id: string]: IPassword;
 }
 
 const writablePasswords = writable<IPasswords>({});
 
-export const passwords = derived(writablePasswords, (state) =>
-	Object.entries(state).map<[app: string, usernames: { username: string; password: string }[]]>(
-		([app, usernames]) => {
-			return [
-				app,
-				Object.entries(usernames).map(([username, password]) => ({
-					username,
-					password
-				}))
-			];
-		}
-	)
+export const passwords = derived(writablePasswords, (state) => Object.values(state));
+export const passwordsById = derived(writablePasswords, (state) => state);
+export const passwordsByUrl = derived(writablePasswords, (state) =>
+	Object.values(state).reduce((acc, entry) => {
+		const urlEntry = acc[entry.url] || (acc[entry.url] = []);
+		urlEntry.push(entry);
+		return acc;
+	}, {} as { [url: string]: IPassword[] })
 );
-export const apps = derived(writablePasswords, Object.keys);
 
-export function setPassword(appKey: string, username: string, password: string) {
+export function addPassword(url: string, username: string, password: string) {
+	const id = v4(),
+		fullURL = new URL(url);
+
+	fullURL.pathname = fullURL.pathname.replace(/\/$/, '');
+
+	const entry = {
+		id,
+		url: fullURL.toString(),
+		username,
+		password
+	};
+
 	writablePasswords.update((state) => {
-		const app = state[appKey] || (state[appKey] = {});
-		app[username] = password;
+		state[entry.id] = entry;
 		return state;
 	});
 	requestUpdate();
 }
 
-export function deletePassword(appKey: string, username: string) {
+export function updatePassword(id: string, url: string, username: string, password: string) {
 	writablePasswords.update((state) => {
-		const app = state[appKey] || (state[appKey] = {});
-		delete app[username];
+		const entry = state[id];
+		if (entry) {
+			const fullURL = new URL(url);
+			fullURL.pathname = fullURL.pathname.replace(/\/$/, '');
+			entry.url = fullURL.toString();
+			entry.username = username;
+			entry.password = password;
+		}
+		return state;
+	});
+	requestUpdate();
+}
+
+export function deletePassword(id: string) {
+	writablePasswords.update((state) => {
+		delete state[id];
 		return state;
 	});
 	requestUpdate();
@@ -52,12 +78,15 @@ async function requestUpdate() {
 	if (requesting) {
 		return;
 	}
-	try {
-		const [privateKey, publicKey] = await getKeys();
-		await update(privateKey, publicKey);
-	} finally {
-		requesting = false;
-	}
+	requesting = true;
+	setTimeout(async () => {
+		try {
+			const [privateKey, publicKey] = await getKeys();
+			await update(privateKey, publicKey);
+		} finally {
+			requesting = false;
+		}
+	}, 300);
 }
 
 function cleanUpPasswords(passwords: IPasswords): IPasswords {
