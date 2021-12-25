@@ -1,17 +1,17 @@
 [package]
-name = "aicacia"
+name = "aicacia_password"
 version = "0.1.0"
-description = "Quantu App"
+description = "Aicacia Password"
 authors = [ "nathanfaucett@gmail.com" ]
 license = "MIT/Apache-2.0"
-repository = "https://github.com/aicacia-app/aicacia-app"
-default-run = "aicacia"
+repository = "https://github.com/aicacia/password"
+default-run = "aicacia_password"
 edition = "2021"
 rust-version = "1.56"
 build = "build.rs"
 
 [[bin]]
-name = "aicacia"
+name = "aicacia_password"
 path = "src/main.rs"
 
 [build-dependencies]
