@@ -5,7 +5,7 @@
 <div class="p-2 absolute bottom-0 w-full">
 	{#each $notifications as notification (notification.id.toString())}
 		<div
-			class="flex items-center rounded py-2 px-3 shadow-md mb-2 cursor-pointer"
+			class="flex items-center py-2 px-3 shadow-md mb-2 cursor-pointer"
 			class:bg-green-500={notification.type === 'success'}
 			class:bg-red-500={notification.type === 'error'}
 			on:click={() => removeNotification(notification.id)}

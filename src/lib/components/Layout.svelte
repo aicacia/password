@@ -3,10 +3,12 @@
 	import Notifications from './Notifications.svelte';
 </script>
 
-<div class="h-screen w-screen bg-gray-50 flex flex-col overflow-auto">
-	<div class="container mx-auto h-full my-8">
+<div class="h-screen w-screen bg-gray-200 flex">
+	<div class="flex flex-col flex-grow">
 		<slot />
 	</div>
-	<RemoteStorage />
+	<div class="absolute left-0 bottom-0 z-20">
+		<RemoteStorage />
+	</div>
 	<Notifications />
 </div>

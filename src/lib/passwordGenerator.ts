@@ -17,13 +17,19 @@ export interface IPasswordGeneratorOptions {
 }
 
 export function passwordGenerator(options: IPasswordGeneratorOptions = {}) {
-	const length = Math.min(6, options.length || passwordGeneratorOptionsDefaults.length),
-		includeSymbols = options.includeSymbols || passwordGeneratorOptionsDefaults.includeSymbols,
+	const length = Math.max(6, options.length || passwordGeneratorOptionsDefaults.length),
+		includeSymbols =
+			options.includeSymbols != null
+				? options.includeSymbols
+				: passwordGeneratorOptionsDefaults.includeSymbols,
 		excludeSimilarCharacters =
-			options.excludeSimilarCharacters || passwordGeneratorOptionsDefaults.excludeSimilarCharacters,
+			options.excludeSimilarCharacters != null
+				? options.excludeSimilarCharacters
+				: passwordGeneratorOptionsDefaults.excludeSimilarCharacters,
 		excludeAmbiguousCharacters =
-			options.excludeAmbiguousCharacters ||
-			passwordGeneratorOptionsDefaults.excludeAmbiguousCharacters,
+			options.excludeAmbiguousCharacters != null
+				? options.excludeAmbiguousCharacters
+				: passwordGeneratorOptionsDefaults.excludeAmbiguousCharacters,
 		rng = XorShiftRng.fromSeed(Math.random() * Date.now());
 
 	return range(0, length)
@@ -41,7 +47,7 @@ function random(
 	excludeSimilarCharacters: boolean,
 	excludeAmbiguousCharacters: boolean
 ): string {
-	let char = includeSymbols && rng.nextFloat() > 0.5 ? randomSymbol(rng) : randomChar(rng);
+	let char = includeSymbols && rng.nextFloat() > 0.75 ? randomSymbol(rng) : randomChar(rng);
 
 	if (excludeSimilarCharacters && SIMILAR_CHARS.includes(char)) {
 		char = random(rng, includeSymbols, excludeSimilarCharacters, excludeAmbiguousCharacters);

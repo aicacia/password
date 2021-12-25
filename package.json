@@ -2,10 +2,14 @@
 	"name": "@aicacia/password",
 	"version": "0.1.0",
 	"type": "module",
+	"workspaces": [
+		"chrome-ext"
+	],
 	"scripts": {
 		"tauri": "tauri",
 		"svelte-kit": "svelte-kit",
 		"clean": "rm -rf node_modules/.vite .svelte-kit build",
+		"package": "svelte-kit package",
 		"web": "svelte-kit dev --host --open",
 		"web.build": "svelte-kit build",
 		"desktop": "tauri dev",
@@ -34,6 +38,7 @@
 		"svelte": "^3.44.2",
 		"svelte-check": "^2.2.10",
 		"svelte-preprocess": "^4.9.8",
+		"svelte2tsx": "^0.4.12",
 		"tailwindcss": "^3.0.1",
 		"tslib": "^2.3.1",
 		"typescript": "^4.5.2"
@@ -46,6 +51,7 @@
 		"eventemitter3": "^4.0.7",
 		"localforage": "^1.10.0",
 		"openpgp": "^5.0.1",
+		"query-string": "^7.0.1",
 		"remotestorage-widget": "^1.5.4",
 		"remotestoragejs": "^2.0.0-beta.1",
 		"svelte-icons": "^2.1.0",

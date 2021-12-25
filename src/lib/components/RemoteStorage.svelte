@@ -1,15 +1,24 @@
 <script lang="ts">
-	import { remoteStorage } from '$lib/state/remotestorage';
+	import { remoteStorage } from '$lib/state/remoteStorage';
 	import { onMount } from 'svelte';
+
+	export let element: HTMLDivElement = undefined;
+	export let widget: any = undefined;
 
 	onMount(() => {
 		import('remotestorage-widget').then(({ default: Widget }) => {
-			const widget = new Widget(remoteStorage);
-			widget.attach('remote-storage-widget');
+			const w = new Widget(remoteStorage);
+			w.attach('remote-storage-widget');
+			(function onWidgetReady() {
+				if (w.rsWidget) {
+					widget = w;
+					element = w.rsWidget;
+				} else {
+					setTimeout(onWidgetReady, 1000);
+				}
+			})();
 		});
 	});
 </script>
 
-<div class="absolute left-0 bottom-0">
-	<div id="remote-storage-widget" />
-</div>
+<div id="remote-storage-widget" />
