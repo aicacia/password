@@ -24,8 +24,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: '${{ steps.tag.outputs.sha_short }}'
-          releaseName: 'Aicacia Password ${{ steps.tag.outputs.sha_short }}'
+          tag_name: '${{ steps.tag.outputs.sha_short }}'
+          release_name: 'Aicacia Password ${{ steps.tag.outputs.sha_short }}'
           draft: false
           prerelease: false
       - uses: actions/upload-release-asset@v1
