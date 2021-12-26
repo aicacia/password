@@ -5,10 +5,13 @@ import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import serve from 'rollup-plugin-serve';
+import zip from 'rollup-plugin-zip';
 import typescript from '@rollup/plugin-typescript';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
+import { readFileSync } from 'fs';
 
 const production = !process.env.ROLLUP_WATCH;
+const packageJSON = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default {
 	input: 'src/manifest.json',
@@ -30,7 +33,11 @@ export default {
 		typescript({ sourceMap: production }),
 		resolve({ browser: true, dedupe: ['svelte'] }),
 		commonjs(),
-		// production && terser(),
+		production && terser(),
+		production &&
+			zip({
+				file: `${packageJSON.name.replace('@', '').replace('/', '-')}.zip`
+			}),
 		!production &&
 			serve({
 				contentBase: ['dist'],

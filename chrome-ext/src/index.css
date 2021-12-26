@@ -47,7 +47,10 @@
 	}
 
 	.input {
-		@apply px-3 py-2 text-black relative bg-gray-100 focus:bg-white text-sm border outline-none focus:outline-none w-full;
+		@apply px-3 py-2 text-black bg-gray-100 focus:bg-white text-sm border outline-none focus:outline-none w-full;
+	}
+	.checkbox {
+		@apply ml-0 mr-4 my-3 text-black;
 	}
 }
 

@@ -45,7 +45,7 @@
 			placeholder="Length"
 			bind:checked={includeSymbols}
 		/>
-		<label for="excludeSimilarCharacters">Exclude Similar? (il1Lo0O)</label>
+		<label for="excludeSimilarCharacters">Exclude Similar?</label>
 		<input
 			id="excludeSimilarCharacters"
 			type="checkbox"
@@ -53,7 +53,7 @@
 			placeholder="Length"
 			bind:checked={excludeSimilarCharacters}
 		/>
-		<label for="excludeAmbiguousCharacters">Exclude Ambiguous? ([]()/\'"`~,;:.)</label>
+		<label for="excludeAmbiguousCharacters">Exclude Ambiguous?</label>
 		<input
 			id="excludeAmbiguousCharacters"
 			type="checkbox"

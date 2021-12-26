@@ -90,4 +90,9 @@
 	{#if connected}
 		<Passwords {url} />
 	{/if}
+	<div class="text-center my-2">
+		<a target="_blank" href="https://aicacia.github.io/password/"
+			>https://aicacia.github.io/password/</a
+		>
+	</div>
 </div>

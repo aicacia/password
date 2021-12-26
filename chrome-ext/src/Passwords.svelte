@@ -37,7 +37,7 @@
 </Modal>
 
 <div class="p-4 bg-white" class:open={addOpen}>
-	<button class="btn primary" on:click={() => (addOpen = !addOpen)}>Add</button>
+	<button class="btn primary" on:click={() => (addOpen = !addOpen)}>Add Password</button>
 	<div class="mt-4">
 		{#each passwords as entry}
 			<Password

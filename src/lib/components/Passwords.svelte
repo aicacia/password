@@ -35,7 +35,7 @@
 </Modal>
 
 <div class="container mx-auto p-4 mt-4 mb-8 bg-white">
-	<button class="btn primary" on:click={() => (addOpen = !addOpen)}>Add</button>
+	<button class="btn primary" on:click={() => (addOpen = !addOpen)}>Add Password</button>
 	<input class="input my-2" type="text" placeholder="Search..." bind:value={search} />
 
 	<div>
