@@ -1,5 +1,6 @@
 {
 	"name": "@aicacia/password-chrome-extension",
+	"description": "A Chrome extension that allows you to generate secure passwords",
 	"version": "0.1.0",
 	"scripts": {
 		"clean": "rm -rf dist",
