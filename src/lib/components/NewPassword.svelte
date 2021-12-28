@@ -1,7 +1,25 @@
+<script lang="ts" context="module">
+	const suite = create((data: Partial<IPassword> = {}, currentField: string) => {
+		only(currentField);
+
+		test('url', 'Application is required', () => {
+			enforce(data.url).isNotBlank();
+		});
+		test('username', 'Username is required', () => {
+			enforce(data.username).isNotBlank();
+		});
+		test('password', 'Password is required', () => {
+			enforce(data.password).isNotBlank();
+		});
+	});
+</script>
+
 <script lang="ts">
+	import { create, test, enforce, only } from 'vest';
 	import { passwordGenerator } from '$lib/passwordGenerator';
-	import { addPassword } from '$lib/state/passwords';
+	import { addPassword, IPassword } from '$lib/state/passwords';
 	import PasswordInput from './PasswordInput.svelte';
+	import InputErrors from './InputErrors.svelte';
 
 	export let url: string = '';
 	export let onAdd: () => void = () => undefined;
@@ -27,15 +45,46 @@
 			excludeAmbiguousCharacters
 		});
 	}
+
+	let result = suite.get();
+
+	const onChange = (name: string) => {
+		result = suite(
+			{
+				url,
+				username,
+				password
+			},
+			name
+		);
+	};
+	$: disabled = !result.isValid();
 </script>
 
-<label for="application">Application</label>
-<input id="application" class="input" type="text" placeholder="Application" bind:value={url} />
+<label for="application">Application/URL</label>
+<InputErrors messages={result.getErrors('url')} />
+<input
+	id="application"
+	class="input"
+	type="text"
+	placeholder="Application/URL"
+	bind:value={url}
+	on:input={() => onChange('url')}
+/>
 <label for="username">Username</label>
-<input id="username" class="input" type="text" placeholder="Username" bind:value={username} />
+<InputErrors messages={result.getErrors('username')} />
+<input
+	id="username"
+	class="input"
+	type="text"
+	placeholder="Username"
+	bind:value={username}
+	on:input={() => onChange('username')}
+/>
 <div>
 	<label for="password">Password</label>
-	<PasswordInput bind:password show />
+	<InputErrors messages={result.getErrors('password')} />
+	<PasswordInput bind:password show onInput={() => onChange('password')} />
 	<div>
 		<label for="includeSymbols">Symbols?</label>
 		<input
@@ -74,6 +123,4 @@
 		</div>
 	</div>
 </div>
-<button class="btn primary mt-6" disabled={!url || !username || !password} on:click={onAddInternal}
-	>Add</button
->
+<button class="btn primary mt-6" {disabled} on:click={onAddInternal}>Add</button>

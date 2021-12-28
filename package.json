@@ -47,6 +47,7 @@
 		"remotestorage-widget": "^1.5.4",
 		"remotestoragejs": "^2.0.0-beta.1",
 		"svelte-icons": "^2.1.0",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"vest": "^4.0.1"
 	}
 }
