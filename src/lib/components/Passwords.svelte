@@ -40,7 +40,7 @@
 
 	<div>
 		{#each Object.entries($passwordsByUrl) as [url, passwords]}
-			<h2 class="mt-2">Application: {url}</h2>
+			<h2 class="mt-2">{url}</h2>
 			{#each passwords.filter( (entry) => (search ? fuzzyEquals(search, entry.username) : true) ) as entry}
 				<Password
 					id={entry.id}

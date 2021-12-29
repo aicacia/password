@@ -70,7 +70,7 @@
 			const tab = tabs[0];
 
 			if (tab) {
-				url = tab.url;
+				url = cleanURL(tab.url);
 			}
 		});
 		chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
@@ -89,6 +89,8 @@
 	</div>
 	{#if connected}
 		<Passwords {url} />
+	{:else}
+		<div class="h-7" />
 	{/if}
 	<div class="text-center my-2">
 		<a target="_blank" href="https://aicacia.github.io/password/"

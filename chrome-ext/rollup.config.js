@@ -4,7 +4,6 @@ import svelte from 'rollup-plugin-svelte';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
-import serve from 'rollup-plugin-serve';
 import zip from 'rollup-plugin-zip';
 import typescript from '@rollup/plugin-typescript';
 import { chromeExtension, simpleReloader } from 'rollup-plugin-chrome-extension';
@@ -37,12 +36,6 @@ export default {
 		production &&
 			zip({
 				file: `${packageJSON.name.replace('@', '').replace('/', '-')}.zip`
-			}),
-		!production &&
-			serve({
-				contentBase: ['dist'],
-				host: 'localhost',
-				port: 3000
 			})
 	]
 };

@@ -1,15 +1,19 @@
-export function cleanURL(rawURL: string): string {
+export function createURL(rawURL: string): URL | undefined {
 	try {
-		const { protocol, host, pathname, hash, search } = new URL(rawURL);
-		let url = `${protocol}//${host}${pathname}`;
-		if (hash) {
-			url += `#${hash}`;
+		const url = new URL(rawURL);
+		url.href = `${url.protocol}//${url.host}${url.pathname}`;
+		if (url.hash) {
+			url.href += `#${url.hash}`;
 		}
-		if (search) {
-			url += `?${search}`;
+		if (url.search) {
+			url.href += `?${url.search}`;
 		}
 		return url;
 	} catch (e) {
-		return rawURL.trim();
+		return undefined;
 	}
+}
+
+export function cleanURL(rawURL: string): string {
+	return createURL(rawURL)?.toString() || rawURL.trim();
 }
