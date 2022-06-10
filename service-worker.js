@@ -1,18 +1,16 @@
-const timestamp = 1640793020862;
 const build = [
-  "/password/_app/start-614e7796.js",
-  "/password/_app/assets/start-d5b4de3e.css",
-  "/password/_app/pages/__layout.svelte-76bf7ee3.js",
-  "/password/_app/assets/pages/__layout.svelte-c0ad2e42.css",
-  "/password/_app/error.svelte-1510c2c6.js",
-  "/password/_app/pages/index.svelte-d0207867.js",
-  "/password/_app/pages/privacy-policy.svelte-46641eea.js",
-  "/password/_app/chunks/vendor-a66a53b1.js",
-  "/password/_app/assets/vendor-86f8c920.css",
-  "/password/_app/chunks/paths-28a87002.js",
-  "/password/_app/chunks/preload-helper-04e99934.js",
-  "/password/_app/chunks/Layout-9f43be66.js",
-  "/password/_app/chunks/widget-3e963cc8.js"
+  "/password/_app/immutable/start-5aec8290.js",
+  "/password/_app/immutable/pages/__layout.svelte-aff631a9.js",
+  "/password/_app/immutable/assets/pages/__layout.svelte-a1e48f80.css",
+  "/password/_app/immutable/error.svelte-539a2629.js",
+  "/password/_app/immutable/pages/index.svelte-6ec4ffea.js",
+  "/password/_app/immutable/assets/pages/index.svelte-cf3861ad.css",
+  "/password/_app/immutable/pages/privacy-policy.svelte-2a73d7f2.js",
+  "/password/_app/immutable/chunks/index-af903a83.js",
+  "/password/_app/immutable/chunks/preload-helper-b1a2c58b.js",
+  "/password/_app/immutable/chunks/paths-396f020f.js",
+  "/password/_app/immutable/chunks/Layout-4529d9e5.js",
+  "/password/_app/immutable/chunks/widget-bc58238e.js"
 ];
 const files = [
   "/password/favicon.png",
@@ -20,30 +18,50 @@ const files = [
   "/password/manifest.json",
   "/password/robots.txt"
 ];
-const CACHE_NAME = `static-cache-v${timestamp}`;
-const FILES_TO_CACHE = [...build, ...files];
-self.addEventListener("install", (evt) => {
-  console.log("[ServiceWorker] Install");
-  evt.waitUntil(caches.open(CACHE_NAME).then((cache) => {
-    console.log("[ServiceWorker] Pre-caching offline page");
-    return cache.addAll(FILES_TO_CACHE);
+const version = "1654822914667";
+const worker = self;
+const FILES = `cache${version}`;
+const toCache = build.concat(files);
+const staticAssets = new Set(toCache);
+worker.addEventListener("install", (event) => {
+  event.waitUntil(caches.open(FILES).then((cache) => cache.addAll(toCache)).then(() => {
+    worker.skipWaiting();
   }));
-  self.skipWaiting();
 });
-self.addEventListener("activate", (evt) => {
-  console.log("[ServiceWorker] Activate");
-  evt.waitUntil(caches.keys().then((keyList) => Promise.all(keyList.map((key) => {
-    if (key !== CACHE_NAME) {
-      console.log("[ServiceWorker] Removing old cache", key);
-      return caches.delete(key);
+worker.addEventListener("activate", (event) => {
+  event.waitUntil(caches.keys().then(async (keys) => {
+    for (const key of keys) {
+      if (key !== FILES)
+        await caches.delete(key);
     }
-  }))));
-  self.clients.claim();
+    worker.clients.claim();
+  }));
 });
-self.addEventListener("fetch", (evt) => {
-  console.log("[ServiceWorker] Fetch", evt.request.url);
-  if (evt.request.mode !== "navigate") {
-    return;
+async function fetchAndCache(request) {
+  const cache = await caches.open(`offline${version}`);
+  try {
+    const response = await fetch(request);
+    cache.put(request, response.clone());
+    return response;
+  } catch (err) {
+    const response = await cache.match(request);
+    if (response)
+      return response;
+    throw err;
   }
-  evt.respondWith(fetch(evt.request).catch(() => caches.open(CACHE_NAME).then((cache) => cache.match("offline.html"))));
+}
+worker.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET" || event.request.headers.has("range"))
+    return;
+  const url = new URL(event.request.url);
+  const isHttp = url.protocol.startsWith("http");
+  const isDevServerRequest = url.hostname === self.location.hostname && url.port !== self.location.port;
+  const isStaticAsset = url.host === self.location.host && staticAssets.has(url.pathname);
+  const skipBecauseUncached = event.request.cache === "only-if-cached" && !isStaticAsset;
+  if (isHttp && !isDevServerRequest && !skipBecauseUncached) {
+    event.respondWith((async () => {
+      const cachedAsset = isStaticAsset && await caches.match(event.request);
+      return cachedAsset || fetchAndCache(event.request);
+    })());
+  }
 });
