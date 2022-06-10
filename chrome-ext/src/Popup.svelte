@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts" context="module">
 	function removeAllListeners<T extends Node>(element: T): T {
 		const newElement = element.cloneNode(true) as T;
@@ -30,7 +32,7 @@
 
 <script lang="ts">
 	import RemoteStorage from '@aicacia/password/components/RemoteStorage.svelte';
-	import { remoteStorage } from '@aicacia/password/state/remoteStorage';
+	import { remoteStorage } from '@aicacia/password/remoteStorage';
 	import { cleanURL } from '@aicacia/password/cleanURL';
 	import { onMount } from 'svelte';
 	import Passwords from './Passwords.svelte';
@@ -84,7 +86,7 @@
 </script>
 
 <div class="w-96 min-h-max relative">
-	<div class="absolute top-0 right-0 z-20">
+	<div class="absolute top-0 left-0 z-20">
 		<RemoteStorage bind:widget />
 	</div>
 	{#if connected}

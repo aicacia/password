@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
 	import { fuzzyEquals } from '@aicacia/string-fuzzy_equals';
 	import { deletePassword, passwordsById, passwordsByUrl } from '@aicacia/password/state/passwords';
@@ -9,6 +11,13 @@
 	export let url: string;
 
 	let addOpen = false;
+
+	function toggleAddOpen() {
+		addOpen = !addOpen;
+	}
+	function closeAdd() {
+		addOpen = false;
+	}
 
 	let deleteId: string;
 	let deleteOpen = false;
@@ -48,7 +57,7 @@
 
 <Modal bind:open={addOpen}>
 	<h3 slot="title">Add Password</h3>
-	<NewPassword {url} onAdd={() => (addOpen = false)} />
+	<NewPassword onAdd={closeAdd} />
 </Modal>
 
 <Modal bind:open={deleteOpen}>
@@ -58,7 +67,9 @@
 </Modal>
 
 <div class="p-4 bg-white" class:open={addOpen}>
-	<button class="btn primary" on:click={() => (addOpen = !addOpen)}>Add Password</button>
+	<div class="flex justify-end">
+		<button class="btn primary" on:click={toggleAddOpen}>Add Password</button>
+	</div>
 	<input class="input my-2" type="text" placeholder="Search..." bind:value={url} />
 
 	<div class="mt-4">

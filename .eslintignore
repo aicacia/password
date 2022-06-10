@@ -3,9 +3,8 @@ node_modules
 /.svelte-kit
 /.vscode
 /build
-/prebuild
 /functions
-/package
-build.pem
+/src-tauri/target/
+WixTools
 .env
 !.env.example

@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts">
 	import { notifications, removeNotification } from '$lib/state/notifications';
 </script>

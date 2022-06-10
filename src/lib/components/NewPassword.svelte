@@ -1,3 +1,5 @@
+<svelte:options immutable />
+
 <script lang="ts" context="module">
 	const suite = create((data: Partial<IPassword> = {}, currentField: string) => {
 		only(currentField);
@@ -17,7 +19,7 @@
 <script lang="ts">
 	import { create, test, enforce, only } from 'vest';
 	import { passwordGenerator } from '$lib/passwordGenerator';
-	import { addPassword, IPassword } from '$lib/state/passwords';
+	import { addPassword, type IPassword } from '$lib/state/passwords';
 	import PasswordInput from './PasswordInput.svelte';
 	import InputErrors from './InputErrors.svelte';
 
@@ -48,7 +50,7 @@
 
 	let result = suite.get();
 
-	const onChange = (name: string) => {
+	$: onChange = (name: string) => {
 		result = suite(
 			{
 				url,
@@ -123,4 +125,6 @@
 		</div>
 	</div>
 </div>
-<button class="btn primary mt-6" {disabled} on:click={onAddInternal}>Add</button>
+<div class="flex justify-end">
+	<button class="btn primary mt-6" {disabled} on:click={onAddInternal}>Add</button>
+</div>

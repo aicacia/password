@@ -1,6 +1,6 @@
 import { range } from '@aicacia/range';
 import type { Rng } from '@aicacia/rand';
-import { XorShiftRng } from '@aicacia/rand';
+import { NativeRng } from '@aicacia/rand';
 
 export const passwordGeneratorOptionsDefaults: IPasswordGeneratorOptions = {
 	length: 16,
@@ -10,13 +10,13 @@ export const passwordGeneratorOptionsDefaults: IPasswordGeneratorOptions = {
 };
 
 export interface IPasswordGeneratorOptions {
-	length?: number;
-	includeSymbols?: boolean; // @#$%
-	excludeSimilarCharacters?: boolean; //  i, l, 1, L, o, 0, O
-	excludeAmbiguousCharacters?: boolean; // { } [ ] ( ) / \ ' " ` ~ , ; : . < >
+	length: number;
+	includeSymbols: boolean; // @#$%
+	excludeSimilarCharacters: boolean; //  i, l, 1, L, o, 0, O
+	excludeAmbiguousCharacters: boolean; // { } [ ] ( ) / \ ' " ` ~ , ; : . < >
 }
 
-export function passwordGenerator(options: IPasswordGeneratorOptions = {}) {
+export function passwordGenerator(options: Partial<IPasswordGeneratorOptions> = {}) {
 	const length = Math.max(6, options.length || passwordGeneratorOptionsDefaults.length),
 		includeSymbols =
 			options.includeSymbols != null
@@ -30,7 +30,7 @@ export function passwordGenerator(options: IPasswordGeneratorOptions = {}) {
 			options.excludeAmbiguousCharacters != null
 				? options.excludeAmbiguousCharacters
 				: passwordGeneratorOptionsDefaults.excludeAmbiguousCharacters,
-		rng = XorShiftRng.fromSeed(Math.random() * Date.now());
+		rng = new NativeRng();
 
 	return range(0, length)
 		.iter()

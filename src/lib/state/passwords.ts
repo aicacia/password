@@ -2,7 +2,7 @@ import { cleanURL } from '$lib/cleanURL';
 import { derived } from 'svelte/store';
 import { writable } from 'svelte/store';
 import { v4 } from 'uuid';
-import { remoteStorage } from './remoteStorage';
+import { remoteStorage } from '../remoteStorage';
 
 remoteStorage.access.claim('passwords', 'rw');
 remoteStorage.caching.enable('/passwords/');
@@ -156,8 +156,9 @@ function upload(state: IPasswords) {
 }
 
 function onSync() {
-	passwordsRS.getObject('passwords.json', false).then((passwords: IPasswordsJSON | undefined) => {
-		if (passwords) {
+	passwordsRS.getObject('passwords.json', false).then((result) => {
+		if (result) {
+			const passwords = result as IPasswordsJSON;
 			delete passwords['@context'];
 			writablePasswords.update((state) => {
 				Object.values(passwords).forEach((password) => {
