@@ -1,16 +1,16 @@
 const build = [
-  "/password/_app/immutable/start-5aec8290.js",
-  "/password/_app/immutable/pages/__layout.svelte-aff631a9.js",
-  "/password/_app/immutable/assets/pages/__layout.svelte-a1e48f80.css",
-  "/password/_app/immutable/error.svelte-539a2629.js",
-  "/password/_app/immutable/pages/index.svelte-6ec4ffea.js",
-  "/password/_app/immutable/assets/pages/index.svelte-cf3861ad.css",
-  "/password/_app/immutable/pages/privacy-policy.svelte-2a73d7f2.js",
-  "/password/_app/immutable/chunks/index-af903a83.js",
-  "/password/_app/immutable/chunks/preload-helper-b1a2c58b.js",
-  "/password/_app/immutable/chunks/paths-396f020f.js",
-  "/password/_app/immutable/chunks/Layout-4529d9e5.js",
-  "/password/_app/immutable/chunks/widget-bc58238e.js"
+  "/password/internal/immutable/start-ac1b8181.js",
+  "/password/internal/immutable/pages/__layout.svelte-aff631a9.js",
+  "/password/internal/immutable/assets/pages/__layout.svelte-a1e48f80.css",
+  "/password/internal/immutable/error.svelte-539a2629.js",
+  "/password/internal/immutable/pages/index.svelte-8d98faea.js",
+  "/password/internal/immutable/assets/pages/index.svelte-cf3861ad.css",
+  "/password/internal/immutable/pages/privacy-policy.svelte-7cdb6db8.js",
+  "/password/internal/immutable/chunks/index-af903a83.js",
+  "/password/internal/immutable/chunks/preload-helper-9c8d85ec.js",
+  "/password/internal/immutable/chunks/paths-396f020f.js",
+  "/password/internal/immutable/chunks/Layout-846029de.js",
+  "/password/internal/immutable/chunks/widget-bc58238e.js"
 ];
 const files = [
   "/password/favicon.png",
@@ -18,7 +18,7 @@ const files = [
   "/password/manifest.json",
   "/password/robots.txt"
 ];
-const version = "1654822914667";
+const version = "1654823237480";
 const worker = self;
 const FILES = `cache${version}`;
 const toCache = build.concat(files);

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="manifest" href="/password/manifest.json" />
+		<link rel="icon" href="/password/favicon.png" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta http-equiv="content-security-policy" content="">
+	<link rel="modulepreload" href="/password/internal/immutable/start-ac1b8181.js">
+	<link rel="modulepreload" href="/password/internal/immutable/chunks/index-af903a83.js">
+	<link rel="modulepreload" href="/password/internal/immutable/chunks/preload-helper-9c8d85ec.js">
+	<link rel="modulepreload" href="/password/internal/immutable/chunks/paths-396f020f.js">
+			<script>
+		if ('serviceWorker' in navigator) {
+			addEventListener('load', () => {
+				navigator.serviceWorker.register('/password/password/service-worker.js');
+			});
+		}
+	</script>
+	</head>
+	<body>
+		
+		<script type="module" data-sveltekit-hydrate="45h">
+		import { start } from "/password/internal/immutable/start-ac1b8181.js";
+		start({
+			target: document.querySelector('[data-sveltekit-hydrate="45h"]').parentNode,
+			paths: {"base":"/password","assets":"/password"},
+			session: {},
+			route: true,
+			spa: true,
+			trailing_slash: "never",
+			hydrate: null
+		});
+	</script>
+	</body>
+</html>
