@@ -15,8 +15,7 @@ jobs:
 
       - run: npm install -g npm@8.3.0
       - run: npm ci
-      - run: npm run package
-      - run: npm -w chrome-ext run build
+      - run: npm run chrome.build
       - id: tag
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - id: create_release
