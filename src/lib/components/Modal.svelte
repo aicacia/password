@@ -1,6 +1,7 @@
 <svelte:options immutable />
 
 <script lang="ts">
+	import Portal from 'svelte-portal/src/Portal.svelte';
 	import MdClose from 'svelte-icons/md/MdClose.svelte';
 
 	export let onClose: () => void = () => undefined;
@@ -12,29 +13,30 @@
 	}
 </script>
 
-<div
-	class="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex"
-	class:hidden={!open}
->
-	<div class="relative my-4 w-96 xl:w-1/3 mx-auto">
-		<div
-			class="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
-		>
-			<div class="flex items-start justify-between px-4 pt-4">
-				<div class="flex-grow">
-					<slot name="title" />
-				</div>
-				<button
-					class="bg-transparent border-0 text-black outline-none focus:outline-none"
-					on:click={close}
+<Portal>
+	<div class="relative z-10" role="dialog" aria-modal="true">
+		<div class="fixed inset-0 bg-gray-500 bg-opacity-25" class:hidden={!open} />
+		<div class="fixed z-10 inset-0 overflow-y-auto" class:hidden={!open}>
+			<div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+				<div
+					class="relative bg-white text-left overflow-hidden shadow-xl sm:my-8 sm:container sm:w-full"
 				>
-					<div class="w-6 h-6"><MdClose /></div>
-				</button>
-			</div>
-			<div class="relative p-4 flex-auto">
-				<slot />
+					<div class="flex items-start justify-between px-4 pt-4">
+						<div class="flex-grow">
+							<slot name="title" />
+						</div>
+						<button
+							class="bg-transparent border-0 text-black outline-none focus:outline-none"
+							on:click={close}
+						>
+							<div class="w-6 h-6"><MdClose /></div>
+						</button>
+					</div>
+					<div class="relative p-4 flex-auto">
+						<slot />
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<div class="opacity-25 fixed inset-0 z-40 bg-black" class:hidden={!open} />
+</Portal>

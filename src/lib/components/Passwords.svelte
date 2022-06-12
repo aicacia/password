@@ -1,29 +1,18 @@
 <svelte:options immutable />
 
-<script lang="ts" context="module">
-	function searchEntry(entry: IPassword, search: string) {
-		return (
-			fuzzyEquals(search, entry.url) ||
-			fuzzyEquals(search, entry.username) ||
-			fuzzyEquals(search, entry.password)
-		);
-	}
-</script>
-
 <script lang="ts">
-	import { fuzzyEquals } from '@aicacia/string-fuzzy_equals';
-	import {
-		deletePassword,
-		passwordsById,
-		passwordsByUrl,
-		type IPassword
-	} from '$lib/state/passwords';
+	import { deletePassword, passwordsByUrl, type IPassword } from '$lib/state/passwords';
 	import Modal from './Modal.svelte';
-	import Password from './Password.svelte';
 	import NewPassword from './NewPassword.svelte';
+	import Saving from './Saving.svelte';
+	import AllPasswords from './AllPasswords.svelte';
+	import PasswordsByUrl from './PasswordsByURL.svelte';
+	import { state } from '$lib/state/state';
 
-	let search = '';
+	export let url: string = '';
+
 	let addOpen = false;
+	let search = '';
 
 	function toggleAddOpen() {
 		addOpen = !addOpen;
@@ -32,21 +21,22 @@
 		addOpen = false;
 	}
 
-	let deleteId: string | undefined;
+	let passordToDelete: IPassword | undefined;
 	let deleteOpen = false;
-	$: deleteEntry = deleteId ? $passwordsById[deleteId] : undefined;
 
-	$: onOpenDeleteModal = (id: string) => {
-		deleteId = id;
+	$: onOpenDeleteModal = (password: IPassword) => {
+		passordToDelete = password;
 		deleteOpen = true;
 	};
 	$: onDelete = () => {
-		if (deleteId) {
-			deletePassword(deleteId);
-			deleteId = undefined;
+		if (passordToDelete) {
+			deletePassword(passordToDelete.id);
+			passordToDelete = undefined;
 			deleteOpen = false;
 		}
 	};
+
+	$: urls = Object.keys($passwordsByUrl);
 </script>
 
 <Modal bind:open={addOpen}>
@@ -56,31 +46,30 @@
 
 <Modal bind:open={deleteOpen}>
 	<h3 slot="title">Deleting Password</h3>
-	<p class="mb-2">Delete {deleteEntry?.url} {deleteEntry?.username} Password?</p>
-	<button class="btn danger" on:click={onDelete}>Delete</button>
+	<p class="mb-2">Delete {passordToDelete?.url} {passordToDelete?.username} Password?</p>
+	<div class="flex justify-end">
+		<button class="btn danger" on:click={onDelete}>Delete</button>
+	</div>
 </Modal>
 
-<div class="container mx-auto p-4 mt-4 mb-8 bg-white">
-	<div class="flex justify-end">
-		<button class="btn primary" on:click={toggleAddOpen}>Add Password</button>
+{#if $state === 'connected'}
+	<div class="flex justify-between">
+		<div class="flex flex-row">
+			<select bind:value={url} class="input">
+				<option />
+				{#each urls as url (url)}
+					<option value={url}>{url}</option>
+				{/each}
+			</select>
+			<Saving />
+		</div>
+		<button class="btn primary" on:click={toggleAddOpen}>Add</button>
 	</div>
 	<input class="input my-2" type="text" placeholder="Search..." bind:value={search} />
 
-	<div>
-		{#each Object.entries($passwordsByUrl) as [url, passwords]}
-			{@const filteredPasswords = search
-				? passwords.filter((entry) => searchEntry(entry, search))
-				: passwords}
-			<h2 class="mt-2">{url}</h2>
-			{#each filteredPasswords as entry}
-				<Password
-					id={entry.id}
-					{url}
-					username={entry.username}
-					password={entry.password}
-					onDelete={onOpenDeleteModal}
-				/>
-			{/each}
-		{/each}
-	</div>
-</div>
+	{#if url}
+		<PasswordsByUrl {url} {search} onDelete={onOpenDeleteModal} />
+	{:else}
+		<AllPasswords {search} onDelete={onOpenDeleteModal} />
+	{/if}
+{/if}

@@ -18,8 +18,6 @@ export async function dropbox(): Promise<string> {
 	}
 	const params = parse(hash.slice(1));
 
-	console.log(params);
-
 	if (params.token_type !== 'bearer' || !params.access_token) {
 		throw 'sync_malformed_response';
 	}

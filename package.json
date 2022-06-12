@@ -21,6 +21,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-static": "next",
 		"@sveltejs/kit": "next",
+		"@types/openpgp": "^4.4.18",
 		"@types/postcss-import": "^14.0.0",
 		"@types/uuid": "^8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.27.1",
@@ -46,10 +47,12 @@
 		"@aicacia/rand": "^0.2.10",
 		"@aicacia/range": "^0.1.2",
 		"@aicacia/string-fuzzy_equals": "^0.1.4",
+		"openpgp": "^5.3.0",
 		"query-string": "^7.1.1",
 		"remotestorage-widget": "^1.5.4",
 		"remotestoragejs": "^2.0.0-beta.3",
 		"svelte-icons": "^2.1.0",
+		"svelte-portal": "^2.2.0",
 		"uuid": "^8.3.2",
 		"vest": "^4.4.1"
 	}

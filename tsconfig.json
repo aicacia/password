@@ -1,11 +1,6 @@
 {
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
-		"lib": [
-			"esnext",
-			"DOM",
-			"WebWorker"
-		],
 		"allowJs": true,
 		"checkJs": true,
 		"esModuleInterop": true,

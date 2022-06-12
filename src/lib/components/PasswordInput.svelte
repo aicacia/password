@@ -6,8 +6,11 @@
 	import IoIosCopy from 'svelte-icons/io/IoIosCopy.svelte';
 	import { tick } from 'svelte';
 
+	export let id: string | undefined = undefined;
+	export let name: string | undefined = undefined;
 	export let password: string;
-	export let onInput: (e: Event) => void = () => undefined;
+	export let onInput: (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => void = () =>
+		undefined;
 	export let show = false;
 
 	function toggleShow() {
@@ -26,22 +29,27 @@
 
 <div class="flex">
 	<textarea class="absolte hidden left-0 bottom-0" bind:this={textarea} value={password} />
-	<input
-		class="input flex-1"
-		class:hidden={!show}
-		type="text"
-		placeholder="Password"
-		bind:value={password}
-		on:input={onInput}
-	/>
-	<input
-		class="input flex-1"
-		class:hidden={show}
-		type="password"
-		placeholder="Password"
-		bind:value={password}
-		on:input={onInput}
-	/>
+	{#if show}
+		<input
+			{id}
+			{name}
+			class="input flex-1"
+			type="text"
+			placeholder="Password"
+			bind:value={password}
+			on:input={onInput}
+		/>
+	{:else}
+		<input
+			{id}
+			{name}
+			class="input flex-1"
+			type="password"
+			placeholder="Password"
+			bind:value={password}
+			on:input={onInput}
+		/>
+	{/if}
 	<div class="grow-0 flex-row flex">
 		<button class="btn p-2" on:click={onCopy}>
 			<div class="w-5 h-5">

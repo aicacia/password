@@ -18,8 +18,6 @@ export async function googledrive(): Promise<string> {
 	const hash = new URL(url).hash || '#';
 	const params = parse(hash.slice(1));
 
-	console.log(params);
-
 	if (params.token_type !== 'Bearer' || !params.access_token) {
 		throw 'sync_malformed_response';
 	}

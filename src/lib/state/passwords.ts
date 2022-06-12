@@ -3,6 +3,7 @@ import { derived } from 'svelte/store';
 import { writable } from 'svelte/store';
 import { v4 } from 'uuid';
 import { remoteStorage } from '../remoteStorage';
+import { wrap } from './tasks';
 
 remoteStorage.access.claim('passwords', 'rw');
 remoteStorage.caching.enable('/passwords/');
@@ -94,31 +95,40 @@ export function addPassword(url: string, username: string, password: string) {
 	};
 
 	writablePasswords.update((state) => {
-		state[entry.id] = entry;
-		upload(state);
-		return state;
+		const newState = { ...state, [entry.id]: entry };
+		upload(newState);
+		return newState;
 	});
 }
 
-export function updatePassword(id: string, url: string, username: string, password: string) {
+export async function updatePassword(id: string, password: Partial<IPassword>) {
+	let uploadTask: Promise<void> | undefined;
 	writablePasswords.update((state) => {
 		const entry = state[id];
 		if (entry) {
-			entry.url = cleanURL(url);
-			entry.username = username;
-			entry.password = password;
-			entry.updatedAt = new Date();
-			upload(state);
+			const newEntry = { ...entry, ...password, updatedAt: new Date() };
+			newEntry.url = cleanURL(newEntry.url);
+			const newState = {
+				...state,
+				[id]: newEntry
+			};
+			uploadTask = upload(newState);
+			return newState;
+		} else {
+			return state;
 		}
-		return state;
 	});
+	if (uploadTask) {
+		await uploadTask;
+	}
 }
 
 export function deletePassword(id: string) {
 	writablePasswords.update((state) => {
-		delete state[id];
-		upload(state);
-		return state;
+		const newState = { ...state };
+		delete newState[id];
+		upload(newState);
+		return newState;
 	});
 }
 
@@ -144,14 +154,16 @@ export function passwordFromJSON(password: IPasswordJSON): IPassword {
 	};
 }
 
-function upload(state: IPasswords) {
-	passwordsRS.storeObject(
-		'passwords',
-		`passwords.json`,
-		Object.values(state).reduce((json, password) => {
-			json[password.id] = passwordToJSON(password);
-			return json;
-		}, {} as IPasswordsJSON)
+async function upload(state: IPasswords) {
+	await wrap(
+		passwordsRS.storeObject(
+			'passwords',
+			`passwords.json`,
+			Object.values(state).reduce((json, password) => {
+				json[password.id] = passwordToJSON(password);
+				return json;
+			}, {} as IPasswordsJSON)
+		)
 	);
 }
 

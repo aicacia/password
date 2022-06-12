@@ -27,6 +27,11 @@
 	a {
 		@apply text-gray-700 active:bg-gray-800 underline;
 	}
+
+	html,
+	body {
+		@apply w-full h-full bg-gray-200;
+	}
 }
 
 @layer components {
@@ -52,13 +57,4 @@
 	.checkbox {
 		@apply ml-0 mr-4 my-3 text-black;
 	}
-}
-
-.rs-state-choose,
-.rs-state-sign-in {
-	position: initial !important;
-	top: initial !important;
-	left: initial !important;
-	right: initial !important;
-	bottom: initial !important;
 }

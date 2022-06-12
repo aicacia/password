@@ -4,6 +4,8 @@
 	export let messages: string[] = [];
 </script>
 
-{#each messages as message}
-	<span class="text-red-500">{message}</span>
-{/each}
+<ul>
+	{#each messages as message}
+		<li class="text-red-500">{message}</li>
+	{/each}
+</ul>

@@ -1,6 +1,8 @@
 <svelte:options immutable />
 
 <script lang="ts" context="module">
+	import { create, test, enforce, only } from 'vest';
+
 	const suite = create((data: Partial<IPassword> = {}, currentField: string) => {
 		only(currentField);
 
@@ -17,7 +19,6 @@
 </script>
 
 <script lang="ts">
-	import { create, test, enforce, only } from 'vest';
 	import { passwordGenerator } from '$lib/passwordGenerator';
 	import { addPassword, type IPassword } from '$lib/state/passwords';
 	import PasswordInput from './PasswordInput.svelte';
@@ -38,7 +39,6 @@
 	let includeSymbols = true;
 	let excludeSimilarCharacters = false;
 	let excludeAmbiguousCharacters = false;
-
 	function onGenerate() {
 		password = passwordGenerator({
 			length,
@@ -49,44 +49,45 @@
 	}
 
 	let result = suite.get();
-
-	$: onChange = (name: string) => {
+	function onChange(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
 		result = suite(
 			{
 				url,
 				username,
 				password
 			},
-			name
+			e.currentTarget.name
 		);
-	};
+	}
 	$: disabled = !result.isValid();
 </script>
 
-<label for="application">Application/URL</label>
-<InputErrors messages={result.getErrors('url')} />
+<label for="url">Application or URL</label>
 <input
-	id="application"
+	id="url"
+	name="url"
 	class="input"
 	type="text"
-	placeholder="Application/URL"
+	placeholder="Application or URL"
 	bind:value={url}
-	on:input={() => onChange('url')}
+	on:input={onChange}
 />
+<InputErrors messages={result.getErrors('url')} />
 <label for="username">Username</label>
-<InputErrors messages={result.getErrors('username')} />
 <input
 	id="username"
+	name="username"
 	class="input"
 	type="text"
 	placeholder="Username"
 	bind:value={username}
-	on:input={() => onChange('username')}
+	on:input={onChange}
 />
+<InputErrors messages={result.getErrors('username')} />
 <div>
 	<label for="password">Password</label>
+	<PasswordInput id="password" name="password" bind:password show onInput={onChange} />
 	<InputErrors messages={result.getErrors('password')} />
-	<PasswordInput bind:password show onInput={() => onChange('password')} />
 	<div>
 		<label for="includeSymbols">Symbols?</label>
 		<input
@@ -112,19 +113,17 @@
 			placeholder="Length"
 			bind:checked={excludeAmbiguousCharacters}
 		/>
-		<div class="flex">
-			<input
-				id="length"
-				class="input"
-				type="number"
-				minlength="6"
-				placeholder="Length"
-				bind:value={length}
-			/>
-			<button class="btn primary" on:click={onGenerate}>Generate</button>
-		</div>
+		<input
+			id="length"
+			class="input"
+			type="number"
+			minlength="6"
+			placeholder="Length"
+			bind:value={length}
+		/>
 	</div>
 </div>
-<div class="flex justify-end">
-	<button class="btn primary mt-6" {disabled} on:click={onAddInternal}>Add</button>
+<div class="flex justify-between mt-6">
+	<button class="btn primary" on:click={onGenerate}>Generate</button>
+	<button class="btn primary" {disabled} on:click={onAddInternal}>Add</button>
 </div>
