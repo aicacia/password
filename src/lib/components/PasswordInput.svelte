@@ -20,11 +20,8 @@
 		}
 	}
 
-	let passwordElement: HTMLInputElement;
 	async function onCopy() {
-		passwordElement.select();
-		passwordElement.setSelectionRange(0, 99999);
-		navigator.clipboard.writeText(passwordElement.value);
+		navigator.clipboard.writeText(password);
 	}
 	let disabled = !show;
 	function onEdit() {
@@ -40,7 +37,6 @@
 		<input
 			{id}
 			{name}
-			bind:this={passwordElement}
 			class="as-input as-flex-1"
 			type="text"
 			placeholder="Enter a Password"
@@ -52,7 +48,6 @@
 		<input
 			{id}
 			{name}
-			bind:this={passwordElement}
 			class="as-input as-flex-1"
 			type="password"
 			placeholder="Enter a Password"

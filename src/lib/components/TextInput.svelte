@@ -23,13 +23,8 @@
 		}
 	}
 
-	let textElement: HTMLTextAreaElement;
-	let inputElement: HTMLInputElement;
 	async function onCopy() {
-		const element = show ? textElement : inputElement;
-		element.select();
-		element.setSelectionRange(0, 99999);
-		navigator.clipboard.writeText(element.value);
+		navigator.clipboard.writeText(text);
 	}
 	let disabled = !show;
 	function onEdit() {
@@ -63,7 +58,6 @@
 		<textarea
 			{id}
 			{name}
-			bind:this={textElement}
 			rows={8}
 			class="as-textarea as-flex-1 as-max-h-32 as-resize-none"
 			type="text"
@@ -73,15 +67,7 @@
 			on:input={onInput}
 		/>
 	{:else}
-		<input
-			{id}
-			{name}
-			bind:this={inputElement}
-			class="as-input as-flex-1"
-			type="password"
-			placeholder="Hidden"
-			{disabled}
-		/>
+		<input {id} {name} class="as-input as-flex-1" type="password" placeholder="Hidden" {disabled} />
 	{/if}
 	<div class="as-absolute as-top-0 as-right-0 as-flex-row as-flex">
 		<button class="as-btn as-primary as-p-2" on:click={onUpload}>

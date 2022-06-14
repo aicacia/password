@@ -40,12 +40,9 @@
 	$: applications = Object.keys($secretsByApplication);
 	let applicationInApplication: string | undefined;
 	$: {
-		const matches = applications.filter((application) =>
-			fuzzyEquals(application, cleanApplication(application))
-		);
-		console.log(matches);
-		if (matches.length === 1) {
-			applicationInApplication = matches[0];
+		const match = applications.find((a) => cleanApplication(application) === cleanApplication(a));
+		if (match) {
+			applicationInApplication = match;
 		}
 	}
 </script>
