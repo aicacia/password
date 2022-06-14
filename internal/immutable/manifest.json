@@ -1,6 +1,6 @@
 {
   ".svelte-kit/runtime/client/start.js": {
-    "file": "start-2dc06c86.js",
+    "file": "start-7363cade.js",
     "src": ".svelte-kit/runtime/client/start.js",
     "isEntry": true,
     "imports": [
@@ -13,11 +13,12 @@
       "src/routes/__layout.svelte",
       ".svelte-kit/runtime/components/error.svelte",
       "src/routes/index.svelte",
-      "src/routes/privacy-policy.svelte"
+      "src/routes/privacy-policy.svelte",
+      "src/routes/terms-of-service.svelte"
     ]
   },
   "src/routes/__layout.svelte": {
-    "file": "pages/__layout.svelte-1247d29b.js",
+    "file": "pages/__layout.svelte-a16bc64e.js",
     "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
@@ -25,7 +26,7 @@
       "_index-88b7c50a.js"
     ],
     "css": [
-      "assets/pages/__layout.svelte-67e3e141.css"
+      "assets/pages/__layout.svelte-259daedb.css"
     ]
   },
   ".svelte-kit/runtime/components/error.svelte": {
@@ -38,13 +39,13 @@
     ]
   },
   "src/routes/index.svelte": {
-    "file": "pages/index.svelte-cae7f88c.js",
+    "file": "pages/index.svelte-0102f9eb.js",
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-88b7c50a.js",
-      "_Layout-c46df740.js",
+      "_Layout-9495e3b8.js",
       "_index-859dd965.js",
       "_preload-helper-91b3b7b7.js"
     ],
@@ -53,14 +54,26 @@
     ]
   },
   "src/routes/privacy-policy.svelte": {
-    "file": "pages/privacy-policy.svelte-c4cb5eae.js",
+    "file": "pages/privacy-policy.svelte-68525cac.js",
     "src": "src/routes/privacy-policy.svelte",
     "isEntry": true,
     "isDynamicEntry": true,
     "imports": [
       "_index-88b7c50a.js",
       "_paths-396f020f.js",
-      "_Layout-c46df740.js",
+      "_Layout-9495e3b8.js",
+      "_index-859dd965.js"
+    ]
+  },
+  "src/routes/terms-of-service.svelte": {
+    "file": "pages/terms-of-service.svelte-97f89255.js",
+    "src": "src/routes/terms-of-service.svelte",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-88b7c50a.js",
+      "_paths-396f020f.js",
+      "_Layout-9495e3b8.js",
       "_index-859dd965.js"
     ]
   },
@@ -79,8 +92,8 @@
   "_preload-helper-91b3b7b7.js": {
     "file": "chunks/preload-helper-91b3b7b7.js"
   },
-  "_Layout-c46df740.js": {
-    "file": "chunks/Layout-c46df740.js",
+  "_Layout-9495e3b8.js": {
+    "file": "chunks/Layout-9495e3b8.js",
     "imports": [
       "_index-88b7c50a.js",
       "_index-859dd965.js"
