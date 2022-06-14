@@ -17,7 +17,7 @@ jobs:
       - run: npm install -g npm@8.3.0
       - run: npm ci
       - run: npm run chrome.build
-      - run: cd ./chrome/dist && zip -r aicacia-secrets-chrome-extension.zip .
+      - run: cd chrome/dist && zip -r aicacia-secrets-chrome-extension.zip .
       - id: tag
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - id: create_release
@@ -34,6 +34,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: aicacia-secrets-chrome-extension.zip
+          asset_path: chrome/dist/aicacia-secrets-chrome-extension.zip
           asset_name: aicacia-secrets-chrome-extension.zip
           asset_content_type: application/zip
