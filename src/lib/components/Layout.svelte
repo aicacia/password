@@ -9,13 +9,18 @@
 		<div class="as-flex as-flex-col as-flex-grow">
 			<slot />
 		</div>
-		<div class="as-text-center as-text-xs as-mt-8 as-mb-2">
+		<div class="as-text-center as-text-xs as-mt-8">
 			&copy; {new Date().getFullYear()}
 			<a target="_blank" href="https://aicacia.github.io/secrets/"
 				>https://aicacia.github.io/secret/</a
 			>
-			&nbsp;
+		</div>
+		<div class="as-text-center as-text-xs as-my-2">
 			<a target="_blank" href="https://aicacia.github.io/secrets/privacy-policy">Privacy Policy</a>
+			|
+			<a target="_blank" href="https://aicacia.github.io/secrets/terms-of-service"
+				>Terms of Service</a
+			>
 		</div>
 	</div>
 </div>
