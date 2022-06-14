@@ -1,17 +1,17 @@
 {
-	"name": "Aicacia Password",
-	"short_name": "Password",
-	"description": "Aicacia Password Generator/Manager",
+	"name": "Aicacia Secrets",
+	"short_name": "Secrets",
+	"description": "Aicacia Secret Generator/Manager",
 	"version": "1.0",
 	"manifest_version": 3,
 	"icons": [
 		{
-			"src": "/password/icon.png",
+			"src": "/secrets/icon.png",
 			"sizes": "256x256",
 			"type": "image/png"
 		}
 	],
-	"start_url": "/password",
+	"start_url": "/secrets",
 	"display": "standalone",
 	"background_color": "#ffffff",
 	"theme_color": "#07689f"
