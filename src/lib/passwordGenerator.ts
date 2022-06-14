@@ -2,7 +2,7 @@ import { range } from '@aicacia/range';
 import type { Rng } from '@aicacia/rand';
 import { NativeRng } from '@aicacia/rand';
 
-export const passwordGeneratorOptionsDefaults: IPasswordGeneratorOptions = {
+export const passwordGeneratorDefaults: IPasswordGeneratorOptions = {
 	length: 16,
 	includeSymbols: true,
 	excludeSimilarCharacters: false,
@@ -17,19 +17,19 @@ export interface IPasswordGeneratorOptions {
 }
 
 export function passwordGenerator(options: Partial<IPasswordGeneratorOptions> = {}) {
-	const length = Math.max(6, options.length || passwordGeneratorOptionsDefaults.length),
+	const length = Math.max(6, options.length || passwordGeneratorDefaults.length),
 		includeSymbols =
 			options.includeSymbols != null
 				? options.includeSymbols
-				: passwordGeneratorOptionsDefaults.includeSymbols,
+				: passwordGeneratorDefaults.includeSymbols,
 		excludeSimilarCharacters =
 			options.excludeSimilarCharacters != null
 				? options.excludeSimilarCharacters
-				: passwordGeneratorOptionsDefaults.excludeSimilarCharacters,
+				: passwordGeneratorDefaults.excludeSimilarCharacters,
 		excludeAmbiguousCharacters =
 			options.excludeAmbiguousCharacters != null
 				? options.excludeAmbiguousCharacters
-				: passwordGeneratorOptionsDefaults.excludeAmbiguousCharacters,
+				: passwordGeneratorDefaults.excludeAmbiguousCharacters,
 		rng = new NativeRng();
 
 	return range(0, length)

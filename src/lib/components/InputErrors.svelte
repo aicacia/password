@@ -6,6 +6,6 @@
 
 <ul>
 	{#each messages as message}
-		<li class="text-red-500">{message}</li>
+		<li class="as-text-red-500">{message}</li>
 	{/each}
 </ul>

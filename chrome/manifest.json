@@ -1,0 +1,30 @@
+{
+	"manifest_version": 3,
+	"name": "Aicacia Secrets",
+	"version": "0.1.0",
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": {
+			"16": "src/assets/icon-16x16.png",
+			"32": "src/assets/icon-32x32.png",
+			"48": "src/assets/icon-48x48.png",
+			"128": "src/assets/icon-128x128.png"
+		}
+	},
+	"background": {
+		"service_worker": "src/lib/background.ts"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*/*"],
+			"js": ["src/lib/contentScript.ts"]
+		}
+	],
+	"icons": {
+		"16": "src/assets/icon-16x16.png",
+		"32": "src/assets/icon-32x32.png",
+		"48": "src/assets/icon-48x48.png",
+		"128": "src/assets/icon-128x128.png"
+	},
+	"permissions": ["activeTab", "tabs", "notifications", "contextMenus", "storage"]
+}

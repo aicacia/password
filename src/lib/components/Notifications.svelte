@@ -7,11 +7,11 @@
 	import Notification from './Notification.svelte';
 </script>
 
-<div class="fixed top-0 left-0 w-full">
-	<div class="container mx-auto">
+<div class="as-fixed as-top-0 as-left-0 as-as-w-full">
+	<div class="as-container as-mx-auto">
 		{#each $notifications as notification (notification.id)}
 			<div
-				class="w-full"
+				class="as-w-full"
 				animate:flip
 				in:fly={{ y: -64, duration: 300 }}
 				out:fly={{ y: -64, duration: 300 }}

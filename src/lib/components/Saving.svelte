@@ -1,6 +1,7 @@
+<svelte:options immutable />
+
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	import { loading, tasks } from '$lib/state/tasks';
+	import { loading } from '$lib/state/tasks';
 	import MdSave from 'svelte-icons/md/MdSave.svelte';
 
 	let saving = false;
@@ -20,18 +21,12 @@
 	}
 </script>
 
-{#if saving}
-	<div transition:fade>
-		<div class="relative">
-			<div class="animate-bounce w-6 h-6">
-				<MdSave />
-			</div>
-			<span
-				class="rounded-full bg-black text-white text-xs w-4 h-4 inline-block text-center leading-[1rem] absolute -bottom-1 -right-1"
-				>{$tasks}</span
-			>
-		</div>
+<div class="as-relative as-w-8 as-h-8">
+	<div
+		class="as-transition-opacity {saving ? 'as-animate-wiggle' : ''}"
+		class:as-opacity-0={!saving}
+		class:as-opacity-100={saving}
+	>
+		<MdSave />
 	</div>
-{:else}
-	<div class="h-1" />
-{/if}
+</div>

@@ -1,4 +1,4 @@
-# aicacia password
+# aicacia secrets
 
 ## Tools
 

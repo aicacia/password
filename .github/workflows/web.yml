@@ -21,7 +21,7 @@ jobs:
       - uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: '/service-worker.js'
-          replace: '/password/service-worker.js'
+          replace: '/secrets/service-worker.js'
           include: '**/*.html'
           regex: false
 

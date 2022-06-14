@@ -6,15 +6,18 @@ const config = {
 	preprocess: preprocess(),
 	kit: {
 		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
 			fallback: 'index.html',
 			precompress: true
 		}),
 		appDir: 'internal',
-		paths: process.env.USE_BASE_PATH
-			? {
-					base: '/password'
-			  }
-			: {}
+		paths: {
+			base: process.env.USE_BASE_PATH ? '/secrets' : ''
+		},
+		prerender: {
+			default: true
+		}
 	}
 };
 

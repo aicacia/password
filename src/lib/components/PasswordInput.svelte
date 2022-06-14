@@ -4,60 +4,76 @@
 	import IoMdEye from 'svelte-icons/io/IoMdEye.svelte';
 	import IoMdEyeOff from 'svelte-icons/io/IoMdEyeOff.svelte';
 	import IoIosCopy from 'svelte-icons/io/IoIosCopy.svelte';
-	import { tick } from 'svelte';
+	import MdEdit from 'svelte-icons/md/MdEdit.svelte';
 
 	export let id: string | undefined = undefined;
 	export let name: string | undefined = undefined;
-	export let password: string;
+	export let secret: string;
 	export let onInput: (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => void = () =>
 		undefined;
 	export let show = false;
 
 	function toggleShow() {
 		show = !show;
+		if (show === false) {
+			disabled = true;
+		}
 	}
 
-	let textarea: HTMLTextAreaElement;
+	let secretElement: HTMLInputElement;
 	async function onCopy() {
-		textarea.select();
-		textarea.setSelectionRange(0, 99999);
-		navigator.clipboard.writeText(textarea.value);
-		await tick();
-		textarea.blur();
+		secretElement.select();
+		secretElement.setSelectionRange(0, 99999);
+		navigator.clipboard.writeText(secretElement.value);
+	}
+	let disabled = true;
+	function onEdit() {
+		disabled = !disabled;
+		if (disabled === false) {
+			show = true;
+		}
 	}
 </script>
 
-<div class="flex">
-	<textarea class="absolte hidden left-0 bottom-0" bind:this={textarea} value={password} />
+<div class="as-flex">
 	{#if show}
 		<input
 			{id}
 			{name}
-			class="input flex-1"
+			bind:this={secretElement}
+			class="as-input as-flex-1"
 			type="text"
-			placeholder="Password"
-			bind:value={password}
+			placeholder="Enter a Password"
+			{disabled}
+			bind:value={secret}
 			on:input={onInput}
 		/>
 	{:else}
 		<input
 			{id}
 			{name}
-			class="input flex-1"
+			bind:this={secretElement}
+			class="as-input as-flex-1"
 			type="password"
-			placeholder="Password"
-			bind:value={password}
+			placeholder="Enter a Password"
+			{disabled}
+			bind:value={secret}
 			on:input={onInput}
 		/>
 	{/if}
-	<div class="grow-0 flex-row flex">
-		<button class="btn p-2" on:click={onCopy}>
-			<div class="w-5 h-5">
+	<div class="as-grow-0 as-flex-row as-flex">
+		<button class="as-btn as-p-2" class:opacity-50={!disabled} on:click={onEdit}>
+			<div class="as-w-5 as-h-5">
+				<MdEdit />
+			</div>
+		</button>
+		<button class="as-btn as-p-2" on:click={onCopy}>
+			<div class="as-w-5 as-h-5">
 				<IoIosCopy />
 			</div>
 		</button>
-		<button class="btn p-2" on:click={toggleShow}>
-			<div class="w-5 h-5">
+		<button class="as-btn as-p-2" on:click={toggleShow}>
+			<div class="as-w-5 as-h-5">
 				{#if show}
 					<IoMdEye />
 				{:else}

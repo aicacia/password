@@ -4,16 +4,18 @@
 	import Notifications from './Notifications.svelte';
 </script>
 
-<div class="relative flex w-full h-full">
-	<div class="flex flex-col w-full h-full">
-		<div class="flex flex-col flex-grow">
+<div class="as-relative as-flex as-w-full as-h-full">
+	<div class="as-flex as-flex-col as-w-full as-h-full">
+		<div class="as-flex as-flex-col as-flex-grow">
 			<slot />
 		</div>
-		<div class="text-center mt-8 mb-2">
+		<div class="as-text-center as-text-xs as-mt-8 as-mb-2">
 			&copy; {new Date().getFullYear()}
-			<a target="_blank" href="https://aicacia.github.io/password/"
-				>https://aicacia.github.io/password/</a
+			<a target="_blank" href="https://aicacia.github.io/secrets/"
+				>https://aicacia.github.io/secret/</a
 			>
+			&nbsp;
+			<a target="_blank" href="https://aicacia.github.io/secrets/privacy-policy">Privacy Policy</a>
 		</div>
 	</div>
 </div>

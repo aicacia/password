@@ -3,9 +3,18 @@
 <script lang="ts">
 	import Portal from 'svelte-portal/src/Portal.svelte';
 	import MdClose from 'svelte-icons/md/MdClose.svelte';
+	import { createInsecureID } from '$lib/util';
+	import { beforeUpdate } from 'svelte';
 
 	export let onClose: () => void = () => undefined;
 	export let open = false;
+
+	let key = createInsecureID();
+	let prevOpen: boolean;
+	$: if (prevOpen !== open) {
+		key = createInsecureID();
+		prevOpen = open;
+	}
 
 	function close() {
 		open = false;
@@ -14,26 +23,32 @@
 </script>
 
 <Portal>
-	<div class="relative z-10" role="dialog" aria-modal="true">
-		<div class="fixed inset-0 bg-gray-500 bg-opacity-25" class:hidden={!open} />
-		<div class="fixed z-10 inset-0 overflow-y-auto" class:hidden={!open}>
-			<div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+	<div class="as-relative as-z-10" role="dialog" aria-modal="true">
+		<div class="as-fixed as-inset-0 as-bg-gray-500 as-bg-opacity-25" class:as-hidden={!open} />
+		<div class="as-fixed as-z-10 as-inset-0 as-overflow-y-auto" class:as-hidden={!open}>
+			<div
+				class="as-flex as-items-end sm:as-items-center as-justify-center as-min-h-full as-p-4 as-text-center sm:as-p-0"
+			>
 				<div
-					class="relative bg-white text-left overflow-hidden shadow-xl sm:my-8 sm:container sm:w-full"
+					class="as-relative as-bg-white as-text-left as-overflow-hidden as-shadow-xl sm:as-my-8 sm:as-container sm:as-w-full"
 				>
-					<div class="flex items-start justify-between px-4 pt-4">
-						<div class="flex-grow">
-							<slot name="title" />
+					<div class="as-flex as-items-start as-justify-between as-px-4 as-pt-4">
+						<div class="as-flex-grow">
+							{#key key}
+								<slot name="title" />
+							{/key}
 						</div>
 						<button
-							class="bg-transparent border-0 text-black outline-none focus:outline-none"
+							class="as-bg-transparent as-border-0 as-text-black as-outline-none focus:as-outline-none"
 							on:click={close}
 						>
-							<div class="w-6 h-6"><MdClose /></div>
+							<div class="as-w-6 as-h-6"><MdClose /></div>
 						</button>
 					</div>
-					<div class="relative p-4 flex-auto">
-						<slot />
+					<div class="as-relative as-p-4 as-flex-auto">
+						{#key key}
+							<slot />
+						{/key}
 					</div>
 				</div>
 			</div>

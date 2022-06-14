@@ -16,21 +16,19 @@
 	onMount(() => {
 		import('remotestorage-widget').then(({ default: Widget }) => {
 			if (GLOBAL_WIDGET) {
-				widget = GLOBAL_WIDGET;
-				element = widget.rsWidget;
-			} else {
-				const w = new Widget(remoteStorage);
-				w.attach(id);
-				GLOBAL_WIDGET = w;
-				(function onWidgetReady() {
-					if (w.rsWidget) {
-						widget = w;
-						element = w.rsWidget;
-					} else {
-						setTimeout(onWidgetReady, 300);
-					}
-				})();
+				GLOBAL_WIDGET.rsWidget?.remove();
 			}
+			const w = new Widget(remoteStorage);
+			w.attach(id);
+			GLOBAL_WIDGET = w;
+			(function onWidgetReady() {
+				if (w.rsWidget) {
+					widget = w;
+					element = w.rsWidget;
+				} else {
+					setTimeout(onWidgetReady, 300);
+				}
+			})();
 		});
 	});
 </script>

@@ -1,14 +1,19 @@
 <script lang="ts">
-	import Passwords from '$lib/components/Passwords.svelte';
+	import Secrets from '$lib/components/Secrets.svelte';
 	import Layout from '$lib/components/Layout.svelte';
 	import RemoteStorage from '$lib/components/RemoteStorage.svelte';
+	import { remoteStorageState } from '$lib/state/remoteStorageState';
 </script>
 
 <Layout>
-	<div class="container mx-auto p-4 mt-4 mb-8 bg-white">
-		<Passwords />
-	</div>
+	{#if $remoteStorageState === 'connected'}
+		<div class="as-container as-mx-auto as-p-4 as-mt-4 as-mb-8 as-bg-white">
+			<Secrets />
+		</div>
+	{:else}
+		<h3 class="as-text-center as-py-8 as-text-lg">Please connect to a Storage Provider</h3>
+	{/if}
 </Layout>
-<div class="absolute left-0 bottom-0">
+<div class="as-absolute as-left-0 as-bottom-0">
 	<RemoteStorage />
 </div>
