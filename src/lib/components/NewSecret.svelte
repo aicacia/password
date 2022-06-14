@@ -31,16 +31,14 @@
 	import InputErrors from './InputErrors.svelte';
 	import { cleanApplication } from '$lib/util';
 	import PasswordGenerator from './PasswordGenerator.svelte';
+	import TextInput from './TextInput.svelte';
 
 	export let application: string = '';
 	export let onAdd: () => void = () => undefined;
 
-	let formData: ISecretData = {
-		type: 'password',
-		application,
-		username: '',
-		secret: ''
-	};
+	let type: ISecretType = 'password';
+	let username = '';
+	let secret = '';
 	let result = suite.get();
 	$: disabled = !result.isValid();
 	if (application) {
@@ -48,27 +46,35 @@
 	}
 
 	function onChangeName(name: string) {
-		result = suite(formData, name);
+		result = suite({ type, application, username, secret }, name);
 	}
-	function onChange(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
+	function onChange(
+		e: Event & { currentTarget: (EventTarget & HTMLInputElement) | HTMLTextAreaElement }
+	) {
 		onChangeName(e.currentTarget.name);
 	}
 	function afterChangeApplication(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		formData = {
-			...formData,
-			application: cleanApplication(e.currentTarget.value)
-		};
+		application = cleanApplication(e.currentTarget.value);
 		onChangeName('application');
+	}
+	function onUploadFile(text: string) {
+		secret = text;
+		onChangeName('secret');
 	}
 
 	let passwordGenerator: PasswordGenerator;
 	function onGenerate() {
-		formData = { ...formData, secret: passwordGenerator.generate() };
+		secret = passwordGenerator.generate();
 		onChangeName('secret');
 	}
 
 	function onAddInternal() {
-		addSecret(formData);
+		addSecret({
+			type,
+			application,
+			username,
+			secret
+		});
 		onAdd();
 	}
 </script>
@@ -80,17 +86,11 @@
 	class="as-input"
 	type="text"
 	placeholder="Application or URL"
-	bind:value={formData.application}
+	bind:value={application}
 	on:input={onChange}
 	on:change={afterChangeApplication}
 />
 <InputErrors messages={result.getErrors('application')} />
-<label for="type">Secret Type</label>
-<select id="type" class="as-input" bind:value={formData.type}>
-	<option value="password">Password</option>
-	<option value="text">Text</option>
-</select>
-<InputErrors messages={result.getErrors('type')} />
 <label for="username">Username</label>
 <input
 	id="username"
@@ -98,15 +98,32 @@
 	class="as-input"
 	type="text"
 	placeholder="Username"
-	bind:value={formData.username}
+	bind:value={username}
 	on:input={onChange}
 />
 <InputErrors messages={result.getErrors('username')} />
-<label for="secret">Secret</label>
-<PasswordInput id="secret" name="secret" bind:secret={formData.secret} show onInput={onChange} />
+<label for="type">Secret Type</label>
+<select id="type" class="as-input" bind:value={type}>
+	<option value="password">Password</option>
+	<option value="text">Text</option>
+</select>
+<InputErrors messages={result.getErrors('type')} />
+{#if type === 'password'}
+	<label for="password">Password</label>
+	<PasswordInput id="password" name="secret" bind:password={secret} show onInput={onChange} />
+	<PasswordGenerator bind:this={passwordGenerator} />
+{:else if type === 'text'}
+	<label for="text">Text</label>
+	<TextInput id="text" name="secret" bind:text={secret} show onInput={onChange} {onUploadFile} />
+{/if}
 <InputErrors messages={result.getErrors('secret')} />
-<PasswordGenerator bind:this={passwordGenerator} />
-<div class="as-flex as-justify-between as-mt-6">
-	<button class="as-btn as-primary" on:click={onGenerate}>Generate</button>
-	<button class="as-btn as-primary" {disabled} on:click={onAddInternal}>Add</button>
-</div>
+{#if type === 'password'}
+	<div class="as-flex as-justify-between as-mt-6">
+		<button class="as-btn as-primary" on:click={onGenerate}>Generate</button>
+		<button class="as-btn as-primary" {disabled} on:click={onAddInternal}>Add</button>
+	</div>
+{:else}
+	<div class="as-flex as-justify-end as-mt-6">
+		<button class="as-btn as-primary" {disabled} on:click={onAddInternal}>Add</button>
+	</div>
+{/if}

@@ -86,9 +86,9 @@ const writableSecrets = writable<ISecrets>({});
 export const secrets = derived(writableSecrets, (state) => Object.values(state));
 export const secretsById = derived(writableSecrets, (state) => state);
 export const secretsByApplication = derived(writableSecrets, (state) =>
-	Object.values(state).reduce((acc, entry) => {
-		const applicationEntry = acc[entry.application] || (acc[entry.application] = []);
-		applicationEntry.push(entry);
+	Object.values(state).reduce((acc, secret) => {
+		const applicationSecret = acc[secret.application] || (acc[secret.application] = []);
+		applicationSecret.push(secret);
 		return acc;
 	}, {} as { [url: string]: ISecret[] })
 );
@@ -100,36 +100,36 @@ export interface IAddSecret {
 	secret: string;
 }
 
-export function addSecret(secret: IAddSecret) {
+export function addSecret(data: IAddSecret) {
 	const id = v4();
 
-	const entry: ISecret = {
+	const secret: ISecret = {
 		id,
-		type: secret.type,
-		application: cleanApplication(secret.application),
-		username: secret.username,
-		secret: secret.secret,
+		type: data.type,
+		application: cleanApplication(data.application),
+		username: data.username,
+		secret: data.secret,
 		createdAt: new Date(),
 		updatedAt: new Date()
 	};
 
 	writableSecrets.update((state) => {
-		const newState = { ...state, [entry.id]: entry };
+		const newState = { ...state, [secret.id]: secret };
 		upload(newState);
 		return newState;
 	});
 }
 
-export async function updateSecret(id: string, secret: Partial<ISecret>) {
+export async function updateSecret(id: string, data: Partial<ISecret>) {
 	let uploadTask: Promise<void> | undefined;
 	writableSecrets.update((state) => {
-		const entry = state[id];
-		if (entry) {
-			const newEntry = { ...entry, ...secret, updatedAt: new Date() };
-			newEntry.application = cleanApplication(newEntry.application);
+		const secret = state[id];
+		if (secret) {
+			const newSecret = { ...secret, ...data, updatedAt: new Date() };
+			newSecret.application = cleanApplication(newSecret.application);
 			const newState = {
 				...state,
-				[id]: newEntry
+				[id]: newSecret
 			};
 			uploadTask = upload(newState);
 			return newState;
@@ -194,15 +194,16 @@ function onSync() {
 			const secrets = result as ISecretsJSON;
 			delete secrets['@context'];
 			writableSecrets.update((state) => {
+				const newState = { ...state };
 				Object.values(secrets).forEach((secret) => {
-					const prevSecret = state[secret.id],
+					const prevSecret = newState[secret.id],
 						newSecret = secretFromJSON(secret);
 
 					if (!prevSecret || prevSecret.updatedAt < newSecret.updatedAt) {
-						state[secret.id] = newSecret;
+						newState[secret.id] = newSecret;
 					}
 				});
-				return state;
+				return newState;
 			});
 		}
 	});

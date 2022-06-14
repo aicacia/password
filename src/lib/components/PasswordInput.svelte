@@ -8,7 +8,7 @@
 
 	export let id: string | undefined = undefined;
 	export let name: string | undefined = undefined;
-	export let secret: string;
+	export let password: string;
 	export let onInput: (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => void = () =>
 		undefined;
 	export let show = false;
@@ -20,13 +20,13 @@
 		}
 	}
 
-	let secretElement: HTMLInputElement;
+	let passwordElement: HTMLInputElement;
 	async function onCopy() {
-		secretElement.select();
-		secretElement.setSelectionRange(0, 99999);
-		navigator.clipboard.writeText(secretElement.value);
+		passwordElement.select();
+		passwordElement.setSelectionRange(0, 99999);
+		navigator.clipboard.writeText(passwordElement.value);
 	}
-	let disabled = true;
+	let disabled = !show;
 	function onEdit() {
 		disabled = !disabled;
 		if (disabled === false) {
@@ -40,39 +40,39 @@
 		<input
 			{id}
 			{name}
-			bind:this={secretElement}
+			bind:this={passwordElement}
 			class="as-input as-flex-1"
 			type="text"
 			placeholder="Enter a Password"
 			{disabled}
-			bind:value={secret}
+			bind:value={password}
 			on:input={onInput}
 		/>
 	{:else}
 		<input
 			{id}
 			{name}
-			bind:this={secretElement}
+			bind:this={passwordElement}
 			class="as-input as-flex-1"
 			type="password"
 			placeholder="Enter a Password"
 			{disabled}
-			bind:value={secret}
+			bind:value={password}
 			on:input={onInput}
 		/>
 	{/if}
 	<div class="as-grow-0 as-flex-row as-flex">
-		<button class="as-btn as-p-2" class:opacity-50={!disabled} on:click={onEdit}>
+		<button class="as-btn as-primary as-p-2" class:opacity-50={!disabled} on:click={onEdit}>
 			<div class="as-w-5 as-h-5">
 				<MdEdit />
 			</div>
 		</button>
-		<button class="as-btn as-p-2" on:click={onCopy}>
+		<button class="as-btn as-primary as-p-2" on:click={onCopy}>
 			<div class="as-w-5 as-h-5">
 				<IoIosCopy />
 			</div>
 		</button>
-		<button class="as-btn as-p-2" on:click={toggleShow}>
+		<button class="as-btn as-primary as-p-2" on:click={toggleShow}>
 			<div class="as-w-5 as-h-5">
 				{#if show}
 					<IoMdEye />

@@ -20,7 +20,7 @@
 
 {#each filteredURLandSecrets as [application, secrets] (application)}
 	{@const filteredSecrets = search
-		? secrets.filter((entry) => searchSecret(entry, search))
+		? secrets.filter((secret) => searchSecret(secret, search))
 		: secrets}
 	<h2 class="as-my-1 as-text-xl">{application}</h2>
 	{#each filteredSecrets as secret (secret.id)}

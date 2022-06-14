@@ -5,6 +5,7 @@
 	import { debounce } from '@aicacia/debounce';
 	import { updateSecret, type ISecret } from '$lib/state/secrets';
 	import PasswordInput from './PasswordInput.svelte';
+	import TextInput from './TextInput.svelte';
 
 	export let secret: ISecret;
 	export let onDelete: (secret: ISecret) => void = () => undefined;
@@ -28,7 +29,7 @@
 			><div class="as-w-6 as-h-6"><MdClose /></div></button
 		>
 	</div>
-	<div class="as-grid as-grid-rows-2 as-grid-flow-row as-w-full">
+	<div class="as-flex-grow">
 		<input
 			class="as-input"
 			type="text"
@@ -36,6 +37,19 @@
 			bind:value={secret.username}
 			on:input={debouncedUpdate}
 		/>
-		<PasswordInput bind:secret={secret.secret} bind:show={showSecret} onInput={debouncedUpdate} />
+		{#if secret.type === 'password'}
+			<PasswordInput
+				bind:password={secret.secret}
+				bind:show={showSecret}
+				onInput={debouncedUpdate}
+			/>
+		{:else if secret.type === 'text'}
+			<TextInput
+				bind:text={secret.secret}
+				bind:show={showSecret}
+				onInput={debouncedUpdate}
+				onUploadFile={debouncedUpdate}
+			/>
+		{/if}
 	</div>
 </div>
