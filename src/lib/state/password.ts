@@ -1,36 +1,43 @@
 import * as openpgp from 'openpgp';
+import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
 
+interface IEmitter {
+	password(password: string): void;
+	cancel(): void;
+	error(error: Error): void;
+}
+
+const emitter = new ee3.EventEmitter<IEmitter>();
+
 const passwordWritable = writable<string | null>(null);
-const askingForPasswordWritable = writable(false);
 
 export const password = derived(passwordWritable, (state) => state);
-export const askingForPassword = derived(askingForPasswordWritable, (state) => state);
+export const askingForPassword = writable(false);
 
 export function setPassword(password: string) {
 	passwordWritable.set(password);
+	emitter.emit('password', password);
 }
 
 export function cancelAskingForPassword() {
-	askingForPasswordWritable.set(false);
+	emitter.emit('cancel');
+	askingForPassword.set(false);
 }
 
 export async function waitForPassword() {
 	return new Promise<string>((resolve, reject) => {
-		let first = true;
-		const unsubscribe = derived([password, askingForPassword], ([password, askingForPassword]) => {
-			if (!first && !askingForPassword && !password) {
-				reject('No password set');
-				setTimeout(unsubscribe, 1);
-			} else if (password) {
-				askingForPasswordWritable.set(false);
-				resolve(password);
-				setTimeout(unsubscribe, 1);
-			} else {
-				askingForPasswordWritable.set(true);
-			}
-			first = false;
-		}).subscribe(() => undefined);
+		const currentPassowrd = get(password);
+		if (currentPassowrd) {
+			resolve(currentPassowrd);
+		} else {
+			askingForPassword.set(true);
+			emitter.once('password', resolve);
+			emitter.once('cancel', () => {
+				reject(new Error('Cancelled'));
+			});
+			emitter.once('error', reject);
+		}
 	});
 }
 

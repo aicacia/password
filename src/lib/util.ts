@@ -2,11 +2,7 @@ import { fuzzyEquals } from '@aicacia/string-fuzzy_equals';
 import type { ISecret } from './state/secrets';
 
 export function searchSecret(secret: ISecret, search: string) {
-	return (
-		fuzzyEquals(search, secret.application) ||
-		fuzzyEquals(search, secret.username) ||
-		fuzzyEquals(search, secret.secret)
-	);
+	return fuzzyEquals(search, secret.application) || fuzzyEquals(search, secret.username);
 }
 
 export function cleanURL(rawURL: string): string | undefined {

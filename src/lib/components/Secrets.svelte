@@ -11,6 +11,7 @@
 	import { remoteStorageState } from '$lib/state/remoteStorageState';
 	import { askingForPassword, cancelAskingForPassword, setPassword } from '$lib/state/password';
 	import SimplePassword from './SimplePassword.svelte';
+	import InputErrors from './InputErrors.svelte';
 
 	export let application: string = '';
 
@@ -49,8 +50,16 @@
 	}
 
 	let password = '';
+	let passwordMessages: string[] = [];
 	function onSetPassword() {
-		setPassword(password);
+		try {
+			setPassword(password);
+			passwordMessages = [];
+			askingForPassword.set(false);
+		} catch (e) {
+			console.error(e);
+			passwordMessages = [(e as Error).message];
+		}
 	}
 </script>
 
@@ -67,9 +76,10 @@
 	<NewSecret onAdd={closeAdd} {application} />
 </Modal>
 
-<Modal open={$askingForPassword} onClose={cancelAskingForPassword}>
+<Modal bind:open={$askingForPassword} onClose={cancelAskingForPassword}>
 	<h3 slot="title" class="as-text-lg">Enter Password</h3>
 	<SimplePassword bind:password />
+	<InputErrors messages={passwordMessages} />
 	<div class="as-flex as-justify-end as-mt-2">
 		<button class="as-btn as-primary" on:click={onSetPassword}>Ok</button>
 	</div>
