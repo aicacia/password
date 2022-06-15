@@ -6,7 +6,6 @@ chrome.runtime.onMessage.addListener(([type, ...args]: [type: string, ...args: u
 	switch (type) {
 		case GENERATE_PASSOWORD_MSG_ID: {
 			const input = document.activeElement;
-			console.log(input);
 			break;
 		}
 	}

@@ -1,8 +1,7 @@
 import * as openpgp from 'openpgp';
 import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
-import SHA256 from 'crypto-js/sha256';
-import Hex from 'crypto-js/enc-hex';
+import { SHA256, enc } from 'crypto-js';
 import { remoteStorage } from '$lib/remoteStorage';
 
 interface IEmitter {
@@ -20,9 +19,7 @@ export const askingForPassword = writable(false);
 
 export function setPassword(password: string) {
 	const storedPassword = localStorage.getItem('password');
-	const passwordHash = SHA256(password).toString(Hex);
-
-	console.log(passwordHash, storedPassword);
+	const passwordHash = SHA256(password).toString(enc.Hex);
 
 	if (!storedPassword || storedPassword === passwordHash) {
 		localStorage.setItem('password', passwordHash);
