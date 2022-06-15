@@ -6,7 +6,7 @@
 </script>
 
 <Layout>
-	{#if $remoteStorageState === 'connected'}
+	{#if $remoteStorageState.storage === 'connected'}
 		<div class="as-container as-mx-auto as-p-4 as-mt-4 as-mb-8 as-bg-white">
 			<Secrets />
 		</div>

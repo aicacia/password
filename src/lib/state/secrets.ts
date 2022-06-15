@@ -1,54 +1,50 @@
 import { cleanApplication } from '$lib/util';
-import { derived } from 'svelte/store';
+import { derived, get } from 'svelte/store';
 import { writable } from 'svelte/store';
 import { v4 } from 'uuid';
 import { remoteStorage } from '../remoteStorage';
-import { wrap } from './tasks';
+import { decryptSecret, encryptSecret } from './password';
 
 remoteStorage.access.claim('secrets', 'rw');
 remoteStorage.caching.enable('/secrets/');
 
+export const SCHEMA_NAME = 'secret';
 export const secretsRS = remoteStorage.scope('/secrets/');
 
-secretsRS.declareType('secrets', {
+secretsRS.declareType(SCHEMA_NAME, {
 	type: 'object',
 	properties: {
-		'.*': {
-			type: 'object',
-			properties: {
-				id: {
-					type: 'string',
-					format: 'uuid'
-				},
-				type: {
-					type: 'string',
-					enum: ['password', 'text']
-				},
-				application: {
-					type: 'string',
-					format: {
-						type: 'oneOf',
-						items: [{ type: 'uri' }, { type: 'string' }]
-					}
-				},
-				username: {
-					type: 'string'
-				},
-				secret: {
-					type: 'string'
-				},
-				createdAt: {
-					type: 'string',
-					format: 'date-time'
-				},
-				updatedAt: {
-					type: 'string',
-					format: 'date-time'
-				}
-			},
-			required: ['id', 'type', 'application', 'username', 'secret', 'createdAt', 'updatedAt']
+		id: {
+			type: 'string',
+			format: 'uuid'
+		},
+		type: {
+			type: 'string',
+			enum: ['password', 'text']
+		},
+		application: {
+			type: 'string',
+			format: {
+				type: 'oneOf',
+				items: [{ type: 'uri' }, { type: 'string' }]
+			}
+		},
+		username: {
+			type: 'string'
+		},
+		encryptedSecret: {
+			type: 'string'
+		},
+		createdAt: {
+			type: 'string',
+			format: 'date-time'
+		},
+		updatedAt: {
+			type: 'string',
+			format: 'date-time'
 		}
-	}
+	},
+	required: ['id', 'type', 'application', 'username', 'encryptedSecret', 'createdAt', 'updatedAt']
 });
 
 export type ISecretType = 'password' | 'text';
@@ -58,9 +54,34 @@ export interface ISecret {
 	type: ISecretType;
 	application: string;
 	username: string;
-	secret: string;
+	secret?: string;
+	encryptedSecret: string;
 	createdAt: Date;
 	updatedAt: Date;
+}
+
+export function secretToJSON(secret: ISecret): ISecretJSON {
+	return {
+		id: secret.id,
+		type: secret.type,
+		application: secret.application,
+		username: secret.username,
+		encryptedSecret: secret.encryptedSecret,
+		createdAt: secret.createdAt.toJSON(),
+		updatedAt: secret.updatedAt.toJSON()
+	};
+}
+
+export function secretFromJSON(secret: ISecretJSON): ISecret {
+	return {
+		id: secret.id,
+		type: secret.type,
+		application: secret.application,
+		username: secret.username,
+		encryptedSecret: secret.encryptedSecret,
+		createdAt: new Date(secret.createdAt),
+		updatedAt: new Date(secret.updatedAt)
+	};
 }
 
 export interface ISecretJSON {
@@ -68,7 +89,7 @@ export interface ISecretJSON {
 	type: ISecretType;
 	application: string;
 	username: string;
-	secret: string;
+	encryptedSecret: string;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -100,7 +121,7 @@ export interface IAddSecret {
 	secret: string;
 }
 
-export function addSecret(data: IAddSecret) {
+export async function addSecret(data: IAddSecret) {
 	const id = v4();
 
 	const secret: ISecret = {
@@ -109,103 +130,109 @@ export function addSecret(data: IAddSecret) {
 		application: cleanApplication(data.application),
 		username: data.username,
 		secret: data.secret,
+		encryptedSecret: await encryptSecret(data.secret),
 		createdAt: new Date(),
 		updatedAt: new Date()
 	};
 
+	let storeTask: Promise<void> | undefined;
 	writableSecrets.update((state) => {
 		const newState = { ...state, [secret.id]: secret };
-		upload(newState);
+		storeTask = rsStoreSecret(secret);
 		return newState;
 	});
+	if (storeTask) {
+		await storeTask;
+	}
 }
 
-export async function updateSecret(id: string, data: Partial<ISecret>) {
-	let uploadTask: Promise<void> | undefined;
+export interface IUpdateSecret {
+	type: ISecretType;
+	application: string;
+	username: string;
+	secret: string;
+}
+
+export async function updateSecret(id: string, data: IUpdateSecret) {
+	let storeTask: Promise<void> | undefined;
+	const encryptedSecret = await encryptSecret(data.secret);
+
 	writableSecrets.update((state) => {
 		const secret = state[id];
 		if (secret) {
-			const newSecret = { ...secret, ...data, updatedAt: new Date() };
+			const newSecret = { ...secret, ...data, id, updatedAt: new Date() };
 			newSecret.application = cleanApplication(newSecret.application);
+			newSecret.encryptedSecret = encryptedSecret;
 			const newState = {
 				...state,
 				[id]: newSecret
 			};
-			uploadTask = upload(newState);
+			storeTask = rsStoreSecret(newSecret);
 			return newState;
 		} else {
 			return state;
 		}
 	});
-	if (uploadTask) {
-		await uploadTask;
+	if (storeTask) {
+		await storeTask;
 	}
 }
 
-export function deleteSecret(id: string) {
+export async function showSecret(secret: ISecret) {
+	if (!secret.secret) {
+		const decryptedSecret = (await decryptSecret(secret.encryptedSecret)) as string;
+		writableSecrets.update((state) => {
+			const stateSecret = state[secret.id];
+			if (secret) {
+				const newSecret = { ...stateSecret };
+				newSecret.secret = decryptedSecret;
+				const newState = {
+					...state,
+					[stateSecret.id]: newSecret
+				};
+				return newState;
+			} else {
+				return state;
+			}
+		});
+	}
+}
+
+export async function deleteSecret(id: string) {
+	let deleteTask: Promise<void> | undefined;
 	writableSecrets.update((state) => {
 		const newState = { ...state };
 		delete newState[id];
-		upload(newState);
+		deleteTask = rsDeleteSecret(id);
 		return newState;
 	});
+	if (deleteTask) {
+		await deleteTask;
+	}
 }
 
-export function secretToJSON(secret: ISecret): ISecretJSON {
-	return {
-		id: secret.id,
-		type: secret.type,
-		application: secret.application,
-		username: secret.username,
-		secret: secret.secret,
-		createdAt: secret.createdAt.toJSON(),
-		updatedAt: secret.updatedAt.toJSON()
-	};
+async function rsStoreSecret(secret: ISecret) {
+	await secretsRS.storeObject(SCHEMA_NAME, `${secret.id}.json`, secretToJSON(secret));
 }
 
-export function secretFromJSON(secret: ISecretJSON): ISecret {
-	return {
-		id: secret.id,
-		type: secret.type,
-		application: secret.application,
-		username: secret.username,
-		secret: secret.secret,
-		createdAt: new Date(secret.createdAt),
-		updatedAt: new Date(secret.updatedAt)
-	};
+async function rsDeleteSecret(id: string) {
+	await secretsRS.remove(`${id}.json`);
 }
 
-async function upload(state: ISecrets) {
-	await wrap(
-		secretsRS.storeObject(
-			'secrets',
-			`secrets.json`,
-			Object.values(state).reduce((json, secret) => {
-				json[secret.id] = secretToJSON(secret);
-				return json;
-			}, {} as ISecretsJSON)
-		)
-	);
-}
+async function onSync() {
+	const secrets = (await secretsRS.getAll('', false)) as ISecretsJSON;
 
-function onSync() {
-	secretsRS.getObject('secrets.json', false).then((result) => {
-		if (result) {
-			const secrets = result as ISecretsJSON;
-			delete secrets['@context'];
-			writableSecrets.update((state) => {
-				const newState = { ...state };
-				Object.values(secrets).forEach((secret) => {
-					const prevSecret = newState[secret.id],
-						newSecret = secretFromJSON(secret);
+	writableSecrets.update((state) => {
+		const newState = { ...state };
+		Object.values(secrets).forEach((secret) => {
+			const prevSecret = newState[secret.id],
+				newSecret = secretFromJSON(secret);
 
-					if (!prevSecret || prevSecret.updatedAt < newSecret.updatedAt) {
-						newState[secret.id] = newSecret;
-					}
-				});
-				return newState;
-			});
-		}
+			if (!prevSecret || prevSecret.updatedAt < newSecret.updatedAt) {
+				newState[secret.id] = newSecret;
+			}
+		});
+		return newState;
 	});
 }
 

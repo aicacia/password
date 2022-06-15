@@ -93,7 +93,7 @@
 
 <div class="as-min-w-[370px] as-min-h-[508px] as-h-1">
 	<Layout embeded={true}>
-		{#if $remoteStorageState === 'connected'}
+		{#if $remoteStorageState.storage === 'connected'}
 			<div class="as-container as-mx-auto as-p-4 as-bg-white">
 				<Secrets {application} />
 			</div>

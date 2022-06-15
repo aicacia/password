@@ -4,7 +4,6 @@
 	import Portal from 'svelte-portal/src/Portal.svelte';
 	import MdClose from 'svelte-icons/md/MdClose.svelte';
 	import { createInsecureID } from '$lib/util';
-	import { beforeUpdate } from 'svelte';
 
 	export let onClose: () => void = () => undefined;
 	export let open = false;
@@ -30,7 +29,7 @@
 				class="as-flex as-items-end sm:as-items-center as-justify-center as-min-h-full as-p-4 as-text-center sm:as-p-0"
 			>
 				<div
-					class="as-relative as-bg-white as-text-left as-overflow-hidden as-shadow-xl sm:as-my-8 sm:as-container sm:as-w-full"
+					class="as-relative as-bg-white as-text-left as-overflow-hidden as-shadow-xl sm:as-my-8 sm:as-container"
 				>
 					<div class="as-flex as-items-start as-justify-between as-px-4 as-pt-4">
 						<div class="as-flex-grow">

@@ -14,12 +14,15 @@
 	export let onInput: (
 		e: Event & { currentTarget: (EventTarget & HTMLInputElement) | HTMLTextAreaElement }
 	) => void = () => undefined;
+	export let onShow: () => void = () => undefined;
 	export let show = false;
 
 	function toggleShow() {
 		show = !show;
 		if (show === false) {
 			disabled = true;
+		} else {
+			onShow();
 		}
 	}
 

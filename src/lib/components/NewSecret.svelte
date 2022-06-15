@@ -32,6 +32,7 @@
 	import { cleanApplication } from '$lib/util';
 	import PasswordGenerator from './PasswordGenerator.svelte';
 	import TextInput from './TextInput.svelte';
+	import { createNotification } from '$lib/state/notifications';
 
 	export let application: string = '';
 	export let onAdd: () => void = () => undefined;
@@ -40,7 +41,7 @@
 	let username = '';
 	let secret = '';
 	let result = suite.get();
-	$: disabled = !result.isValid();
+	$: disabled = adding || !result.isValid();
 	if (application) {
 		onChangeName('application');
 	}
@@ -68,14 +69,23 @@
 		onChangeName('secret');
 	}
 
-	function onAddInternal() {
-		addSecret({
-			type,
-			application,
-			username,
-			secret
-		});
-		onAdd();
+	let adding = false;
+	async function onAddInternal() {
+		adding = true;
+		try {
+			await addSecret({
+				type,
+				application,
+				username,
+				secret
+			});
+			onAdd();
+		} catch (e) {
+			console.error(e);
+			createNotification((e as Error).message);
+		} finally {
+			adding = false;
+		}
 	}
 </script>
 
