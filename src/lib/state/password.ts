@@ -3,7 +3,6 @@ import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
 import { SHA256, enc } from 'crypto-js';
 import { remoteStorage } from '$lib/remoteStorage';
-import { browser } from '$app/env';
 
 const CHECKED_MS = 1000 * 60 * 60 * 24;
 
@@ -93,7 +92,7 @@ export async function decryptSecret(encryptedSecret: string) {
 	}
 }
 
-if (browser) {
+if (typeof window !== 'undefined') {
 	const storedPassword = localStorage.getItem('password');
 	const lastedChecked = localStorage.getItem('last-checked');
 	let canFetch = false;
