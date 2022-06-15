@@ -1,9 +1,9 @@
 const build = [
-  "/secrets/internal/immutable/start-050864bc.js",
+  "/secrets/internal/immutable/start-84086d2d.js",
   "/secrets/internal/immutable/pages/__layout.svelte-51b5392b.js",
   "/secrets/internal/immutable/assets/pages/__layout.svelte-0bc20e30.css",
   "/secrets/internal/immutable/error.svelte-67b8f836.js",
-  "/secrets/internal/immutable/pages/index.svelte-e544db2a.js",
+  "/secrets/internal/immutable/pages/index.svelte-cafd5b90.js",
   "/secrets/internal/immutable/pages/privacy-policy.svelte-50197b25.js",
   "/secrets/internal/immutable/pages/terms-of-service.svelte-14f97548.js",
   "/secrets/internal/immutable/chunks/index-b32f51c6.js",
@@ -20,7 +20,7 @@ const files = [
   "/secrets/manifest.json",
   "/secrets/robots.txt"
 ];
-const version = "1655292140765";
+const version = "1655293185043";
 const worker = self;
 const FILES = `cache${version}`;
 const toCache = build.concat(files);
