@@ -3,6 +3,9 @@ import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
 import { SHA256, enc } from 'crypto-js';
 import { remoteStorage } from '$lib/remoteStorage';
+import { browser } from '$app/env';
+
+const CHECKED_MS = 1000 * 60 * 60 * 24;
 
 interface IEmitter {
 	password(password: string): void;
@@ -23,6 +26,7 @@ export function setPassword(password: string) {
 
 	if (!storedPassword || storedPassword === passwordHash) {
 		localStorage.setItem('password', passwordHash);
+		localStorage.setItem('last-checked', Date.now().toString());
 		passwordWritable.set(passwordHash);
 		emitter.emit('password', passwordHash);
 	} else {
@@ -86,5 +90,23 @@ export async function decryptSecret(encryptedSecret: string) {
 	} catch (e) {
 		passwordWritable.set(null);
 		throw e;
+	}
+}
+
+if (browser) {
+	const storedPassword = localStorage.getItem('password');
+	const lastedChecked = localStorage.getItem('last-checked');
+	let canFetch = false;
+	if (lastedChecked) {
+		const date = new Date(lastedChecked);
+		if (date.getTime() + CHECKED_MS < Date.now()) {
+			canFetch = false;
+			askingForPassword.set(true);
+		} else {
+			canFetch = true;
+		}
+	}
+	if (canFetch && storedPassword) {
+		passwordWritable.set(storedPassword);
 	}
 }
