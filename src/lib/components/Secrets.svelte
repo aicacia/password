@@ -9,9 +9,15 @@
 	import SecretsByApplication from './SecretsByApplication.svelte';
 	import { cleanApplication } from '$lib/util';
 	import { remoteStorageState } from '$lib/state/remoteStorageState';
-	import { askingForPassword, cancelAskingForPassword, setPassword } from '$lib/state/password';
+	import {
+		askingForPassword,
+		cancelAskingForPassword,
+		clearPassword,
+		setPassword
+	} from '$lib/state/password';
 	import SimplePassword from './SimplePassword.svelte';
 	import InputErrors from './InputErrors.svelte';
+	import { createNotification, NotificationType } from '$lib/state/notifications';
 
 	export let application: string = '';
 
@@ -61,6 +67,10 @@
 			passwordMessages = [(e as Error).message];
 		}
 	}
+	function onClearPassword() {
+		clearPassword();
+		createNotification('Password cleared', NotificationType.Info);
+	}
 </script>
 
 <Modal bind:open={deleteOpen}>
@@ -80,7 +90,8 @@
 	<h3 slot="title" class="as-text-lg">Enter Password</h3>
 	<SimplePassword bind:password />
 	<InputErrors messages={passwordMessages} />
-	<div class="as-flex as-justify-end as-mt-2">
+	<div class="as-flex as-justify-between as-mt-2">
+		<button class="as-btn as-danger" on:click={onClearPassword}>Clear Stored</button>
 		<button class="as-btn as-primary" on:click={onSetPassword}>Ok</button>
 	</div>
 </Modal>

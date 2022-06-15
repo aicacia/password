@@ -1,6 +1,9 @@
 import * as openpgp from 'openpgp';
 import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
+import SHA256 from 'crypto-js/sha256';
+import Hex from 'crypto-js/enc-hex';
+import { remoteStorage } from '$lib/remoteStorage';
 
 interface IEmitter {
 	password(password: string): void;
@@ -16,9 +19,26 @@ export const password = derived(passwordWritable, (state) => state);
 export const askingForPassword = writable(false);
 
 export function setPassword(password: string) {
-	passwordWritable.set(password);
-	emitter.emit('password', password);
+	const storedPassword = localStorage.getItem('password');
+	const passwordHash = SHA256(password).toString(Hex);
+
+	console.log(passwordHash, storedPassword);
+
+	if (!storedPassword || storedPassword === passwordHash) {
+		localStorage.setItem('password', passwordHash);
+		passwordWritable.set(passwordHash);
+		emitter.emit('password', passwordHash);
+	} else {
+		emitter.emit('error', new Error("Password doesn't not match"));
+	}
 }
+
+export function clearPassword() {
+	localStorage.removeItem('password');
+	passwordWritable.set(null);
+}
+
+remoteStorage.on('disconnected', clearPassword);
 
 export function cancelAskingForPassword() {
 	emitter.emit('cancel');
