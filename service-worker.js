@@ -1,16 +1,16 @@
 const build = [
-  "/secrets/internal/immutable/start-3c42f673.js",
-  "/secrets/internal/immutable/pages/__layout.svelte-51b5392b.js",
+  "/secrets/internal/immutable/start-900fd849.js",
+  "/secrets/internal/immutable/pages/__layout.svelte-ef16ba18.js",
   "/secrets/internal/immutable/assets/pages/__layout.svelte-0bc20e30.css",
-  "/secrets/internal/immutable/error.svelte-67b8f836.js",
-  "/secrets/internal/immutable/pages/index.svelte-f8e6d0a1.js",
-  "/secrets/internal/immutable/pages/privacy-policy.svelte-50197b25.js",
-  "/secrets/internal/immutable/pages/terms-of-service.svelte-14f97548.js",
-  "/secrets/internal/immutable/chunks/index-b32f51c6.js",
-  "/secrets/internal/immutable/chunks/index-ffc9c32f.js",
+  "/secrets/internal/immutable/error.svelte-004b9777.js",
+  "/secrets/internal/immutable/pages/index.svelte-2b9e84d5.js",
+  "/secrets/internal/immutable/pages/privacy-policy.svelte-e5f39db2.js",
+  "/secrets/internal/immutable/pages/terms-of-service.svelte-b2e62b7b.js",
+  "/secrets/internal/immutable/chunks/index-919745c3.js",
+  "/secrets/internal/immutable/chunks/index-4459df0c.js",
   "/secrets/internal/immutable/chunks/paths-396f020f.js",
   "/secrets/internal/immutable/chunks/preload-helper-91b3b7b7.js",
-  "/secrets/internal/immutable/chunks/Layout-b75bc83d.js",
+  "/secrets/internal/immutable/chunks/Layout-b9598759.js",
   "/secrets/internal/immutable/assets/Layout-14f30235.css",
   "/secrets/internal/immutable/chunks/widget-bc58238e.js"
 ];
@@ -20,7 +20,7 @@ const files = [
   "/secrets/manifest.json",
   "/secrets/robots.txt"
 ];
-const version = "1655293252255";
+const version = "1655345830648";
 const worker = self;
 const FILES = `cache${version}`;
 const toCache = build.concat(files);
