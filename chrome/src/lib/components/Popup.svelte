@@ -33,12 +33,12 @@
 </script>
 
 <script lang="ts">
-	import RemoteStorage from '@aicacia/secret/components/RemoteStorage.svelte';
-	import Secrets from '@aicacia/secret/components/Secrets.svelte';
-	import Layout from '@aicacia/secret/components/Layout.svelte';
-	import { remoteStorageState } from '@aicacia/secret/state/remoteStorageState';
-	import { remoteStorage } from '@aicacia/secret/remoteStorage';
-	import { cleanApplication } from '@aicacia/secret/util';
+	import RemoteStorage from '@aicacia/secrets/components/RemoteStorage.svelte';
+	import Secrets from '@aicacia/secrets/components/Secrets.svelte';
+	import Layout from '@aicacia/secrets/components/Layout.svelte';
+	import { remoteStorageState } from '@aicacia/secrets/state/remoteStorageState';
+	import { remoteStorage } from '@aicacia/secrets/remoteStorage';
+	import { cleanApplication } from '@aicacia/secrets/util';
 	import type Widget from 'remotestorage-widget';
 	import { onMount } from 'svelte';
 	import { SIGN_IN_MSG_ID, SIGN_OUT_MSG_ID } from '../constants';

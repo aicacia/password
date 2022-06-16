@@ -1,5 +1,5 @@
 import './preflight.postcss';
-import './index.postcss';
+import '@aicacia/secrets/index.postcss';
 import Popup from './lib/components/Popup.svelte';
 
 function main() {

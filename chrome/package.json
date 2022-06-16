@@ -23,6 +23,6 @@
 		"vite": "^2.9.12"
 	},
 	"dependencies": {
-		"@aicacia/secret": "file:../package"
+		"@aicacia/secrets": "file:../package"
 	}
 }

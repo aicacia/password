@@ -1,4 +1,4 @@
-import { GOOGLE_DRIVE_CLIENT_ID } from '@aicacia/secret/constants';
+import { GOOGLE_DRIVE_CLIENT_ID } from '@aicacia/secrets/constants';
 import { parse } from 'query-string';
 import { openAndWait } from '../openAndWait';
 

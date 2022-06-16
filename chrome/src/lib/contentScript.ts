@@ -1,5 +1,5 @@
 import '../wrapped-preflight.postcss';
-import '../index.postcss';
+import '@aicacia/secrets/index.postcss';
 import { GENERATE_PASSOWORD_MSG_ID } from './constants';
 
 chrome.runtime.onMessage.addListener(([type, ...args]: [type: string, ...args: unknown[]]) => {

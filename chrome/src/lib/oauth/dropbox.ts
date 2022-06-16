@@ -1,4 +1,4 @@
-import { DROPBOX_CLIENT_ID } from '@aicacia/secret/constants';
+import { DROPBOX_CLIENT_ID } from '@aicacia/secrets/constants';
 import { parse } from 'query-string';
 import { openAndWait } from '../openAndWait';
 
