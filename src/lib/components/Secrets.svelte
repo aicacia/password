@@ -67,18 +67,21 @@
 			passwordMessages = [(e as Error).message];
 		}
 	}
-	function onClearPassword() {
-		clearPassword();
-		createNotification('Password cleared', NotificationType.Info);
-	}
 </script>
 
 <Modal bind:open={deleteOpen}>
 	<h3 slot="title" class="as-text-lg">Deleting Secret</h3>
-	<p class="as-mb-2">Delete {passordToDelete?.application} {passordToDelete?.username} Secret?</p>
-	<div class="as-flex as-justify-end as-mt-2">
-		<button class="as-btn as-danger" on:click={onDelete}>Delete</button>
-	</div>
+	<form on:submit|preventDefault>
+		<p class="as-mb-2">Delete {passordToDelete?.application} {passordToDelete?.username} Secret?</p>
+		<div class="as-flex as-justify-end as-mt-2">
+			<input
+				type="submit"
+				class="as-btn as-danger"
+				on:click|preventDefault={onDelete}
+				value="Delete"
+			/>
+		</div>
+	</form>
 </Modal>
 
 <Modal bind:open={addOpen}>
@@ -87,13 +90,19 @@
 </Modal>
 
 <Modal bind:open={$askingForPassword} onClose={cancelAskingForPassword}>
-	<h3 slot="title" class="as-text-lg">Enter Password</h3>
-	<SimplePassword bind:password />
-	<InputErrors messages={passwordMessages} />
-	<div class="as-flex as-justify-between as-mt-2">
-		<button class="as-btn as-danger" on:click={onClearPassword}>Clear Stored</button>
-		<button class="as-btn as-primary" on:click={onSetPassword}>Ok</button>
-	</div>
+	<h3 slot="title" class="as-text-lg">Enter Master Password</h3>
+	<form on:submit|preventDefault>
+		<SimplePassword bind:password />
+		<InputErrors messages={passwordMessages} />
+		<div class="as-flex as-justify-end as-mt-2">
+			<input
+				type="submit"
+				class="as-btn as-primary"
+				on:click|preventDefault={onSetPassword}
+				value="Ok"
+			/>
+		</div>
+	</form>
 </Modal>
 
 <div class="as-flex as-justify-between">

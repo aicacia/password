@@ -38,6 +38,7 @@ export function clearPassword() {
 	passwordWritable.set(null);
 }
 
+remoteStorage.on('connected', waitForPassword);
 remoteStorage.on('disconnected', clearPassword);
 
 export function cancelAskingForPassword() {

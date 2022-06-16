@@ -89,51 +89,65 @@
 	}
 </script>
 
-<label for="application">Application or URL</label>
-<input
-	id="application"
-	name="application"
-	class="as-input"
-	type="text"
-	placeholder="Application or URL"
-	bind:value={application}
-	on:input={onChange}
-	on:change={afterChangeApplication}
-/>
-<InputErrors messages={result.getErrors('application')} />
-<label for="username">Username</label>
-<input
-	id="username"
-	name="username"
-	class="as-input"
-	type="text"
-	placeholder="Username"
-	bind:value={username}
-	on:input={onChange}
-/>
-<InputErrors messages={result.getErrors('username')} />
-<label for="type">Secret Type</label>
-<select id="type" class="as-input" bind:value={type}>
-	<option value="password">Password</option>
-	<option value="text">Text</option>
-</select>
-<InputErrors messages={result.getErrors('type')} />
-{#if type === 'password'}
-	<label for="password">Password</label>
-	<PasswordInput id="password" name="secret" bind:password={secret} show onInput={onChange} />
-	<PasswordGenerator bind:this={passwordGenerator} />
-{:else if type === 'text'}
-	<label for="text">Text</label>
-	<TextInput id="text" name="secret" bind:text={secret} show onInput={onChange} {onUploadFile} />
-{/if}
-<InputErrors messages={result.getErrors('secret')} />
-{#if type === 'password'}
-	<div class="as-flex as-justify-between as-mt-6">
-		<button class="as-btn as-primary" on:click={onGenerate}>Generate</button>
-		<button class="as-btn as-primary" {disabled} on:click={onAddInternal}>Add</button>
-	</div>
-{:else}
-	<div class="as-flex as-justify-end as-mt-6">
-		<button class="as-btn as-primary" {disabled} on:click={onAddInternal}>Add</button>
-	</div>
-{/if}
+<form on:submit|preventDefault>
+	<label for="application">Application or URL</label>
+	<input
+		id="application"
+		name="application"
+		class="as-input"
+		type="text"
+		placeholder="Application or URL"
+		bind:value={application}
+		on:input={onChange}
+		on:change={afterChangeApplication}
+	/>
+	<InputErrors messages={result.getErrors('application')} />
+	<label for="username">Username</label>
+	<input
+		id="username"
+		name="username"
+		class="as-input"
+		type="text"
+		placeholder="Username"
+		bind:value={username}
+		on:input={onChange}
+	/>
+	<InputErrors messages={result.getErrors('username')} />
+	<label for="type">Secret Type</label>
+	<select id="type" class="as-input" bind:value={type}>
+		<option value="password">Password</option>
+		<option value="text">Text</option>
+	</select>
+	<InputErrors messages={result.getErrors('type')} />
+	{#if type === 'password'}
+		<label for="password">Password</label>
+		<PasswordInput id="password" name="secret" bind:password={secret} show onInput={onChange} />
+		<PasswordGenerator bind:this={passwordGenerator} />
+	{:else if type === 'text'}
+		<label for="text">Text</label>
+		<TextInput id="text" name="secret" bind:text={secret} show onInput={onChange} {onUploadFile} />
+	{/if}
+	<InputErrors messages={result.getErrors('secret')} />
+	{#if type === 'password'}
+		<div class="as-flex as-justify-between as-mt-6">
+			<input type="submit" class="as-btn as-primary" on:click={onGenerate} value="Generate" />
+			<input
+				type="submit"
+				class="as-btn as-primary"
+				{disabled}
+				on:click={onAddInternal}
+				value="Add"
+			/>
+		</div>
+	{:else}
+		<div class="as-flex as-justify-end as-mt-6">
+			<input
+				type="submit"
+				class="as-btn as-primary"
+				{disabled}
+				on:click={onAddInternal}
+				value="Add"
+			/>
+		</div>
+	{/if}
+</form>

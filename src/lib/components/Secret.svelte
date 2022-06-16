@@ -17,6 +17,7 @@
 	async function onShow() {
 		try {
 			await showSecret(secret);
+			show = true;
 		} catch (e) {
 			console.error(e);
 			createNotification((e as Error).message);
