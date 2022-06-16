@@ -4,6 +4,7 @@ import { writable } from 'svelte/store';
 import { v4 } from 'uuid';
 import { remoteStorage } from '../remoteStorage';
 import { decryptSecret, encryptSecret } from './password';
+import { wrap } from './tasks';
 
 remoteStorage.access.claim('secrets', 'rw');
 remoteStorage.caching.enable('/secrets/');
@@ -212,11 +213,11 @@ export async function deleteSecret(id: string) {
 }
 
 async function rsStoreSecret(secret: ISecret) {
-	await secretsRS.storeObject(SCHEMA_NAME, `${secret.id}.json`, secretToJSON(secret));
+	await wrap(secretsRS.storeObject(SCHEMA_NAME, `${secret.id}.json`, secretToJSON(secret)));
 }
 
 async function rsDeleteSecret(id: string) {
-	await secretsRS.remove(`${id}.json`);
+	await wrap(secretsRS.remove(`${id}.json`));
 }
 
 async function onSync() {

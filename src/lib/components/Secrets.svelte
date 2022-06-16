@@ -8,16 +8,10 @@
 	import AllSecrets from './AllSecrets.svelte';
 	import SecretsByApplication from './SecretsByApplication.svelte';
 	import { cleanApplication } from '$lib/util';
-	import { remoteStorageState } from '$lib/state/remoteStorageState';
-	import {
-		askingForPassword,
-		cancelAskingForPassword,
-		clearPassword,
-		setPassword
-	} from '$lib/state/password';
+	import { askingForPassword, cancelAskingForPassword, setPassword } from '$lib/state/password';
 	import SimplePassword from './SimplePassword.svelte';
 	import InputErrors from './InputErrors.svelte';
-	import { createNotification, NotificationType } from '$lib/state/notifications';
+	import { loading } from '$lib/state/tasks';
 
 	export let application: string = '';
 
@@ -120,7 +114,7 @@
 		</div>
 		<div class="as-flex as-flex-col as-p-1 as-justify-end">
 			<div class="as-grow-0">
-				<Saving saving={$remoteStorageState.wire === 'syncing'} />
+				<Saving saving={$loading} />
 			</div>
 		</div>
 	</div>
