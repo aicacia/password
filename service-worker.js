@@ -1,5 +1,5 @@
 const build = [
-  "/secrets/internal/immutable/start-fc65a11a.js",
+  "/secrets/internal/immutable/start-57e39f5b.js",
   "/secrets/internal/immutable/pages/__layout.svelte-ef16ba18.js",
   "/secrets/internal/immutable/assets/pages/__layout.svelte-0bc20e30.css",
   "/secrets/internal/immutable/error.svelte-004b9777.js",
@@ -20,7 +20,7 @@ const files = [
   "/secrets/manifest.json",
   "/secrets/robots.txt"
 ];
-const version = "1655346935734";
+const version = "1655347103919";
 const worker = self;
 const FILES = `cache${version}`;
 const toCache = build.concat(files);
