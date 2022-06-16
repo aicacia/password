@@ -48,12 +48,9 @@
 
 	$: applications = Object.keys($secretsByApplication);
 	let applicationInApplication: string | undefined;
-	$: {
-		const match = applications.find((a) => cleanApplication(application) === cleanApplication(a));
-		if (match) {
-			applicationInApplication = match;
-		}
-	}
+	$: applicationInApplication = applications.find(
+		(a) => cleanApplication(application) === cleanApplication(a)
+	);
 
 	let password = '';
 	let passwordMessages: string[] = [];
@@ -107,17 +104,31 @@
 
 <div class="as-flex as-justify-between">
 	<div class="as-flex as-flex-row as-flex-grow">
-		<select bind:value={application} class="as-input as-flex">
-			<option />
-			{#each applications as application (application)}
-				<option value={application}>{application}</option>
-			{/each}
-		</select>
-		<div class="as-flex as-p-1">
-			<Saving saving={$remoteStorageState.wire === 'syncing'} />
+		<div class="as-flex-1">
+			<label for="filter-application">Filter by Application or URL</label>
+			<select
+				id="filter-application"
+				name="filter-application"
+				bind:value={application}
+				class="as-input as-flex"
+			>
+				<option value={''} />
+				{#each applications as application (application)}
+					<option value={application}>{application}</option>
+				{/each}
+			</select>
+		</div>
+		<div class="as-flex as-flex-col as-p-1 as-justify-end">
+			<div class="as-grow-0">
+				<Saving saving={$remoteStorageState.wire === 'syncing'} />
+			</div>
 		</div>
 	</div>
-	<button class="as-btn as-primary" on:click={toggleAddOpen}>Add</button>
+	<div class="as-flex as-flex-col as-justify-end">
+		<div class="as-grow-0">
+			<button class="as-btn as-primary" on:click={toggleAddOpen}>Add</button>
+		</div>
+	</div>
 </div>
 <input class="as-input as-my-2" type="text" placeholder="Search..." bind:value={search} />
 
