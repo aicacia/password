@@ -1,1 +1,1 @@
-export { secretGenerator } from './secretGenerator';
+export { passwordGenerator, type IPasswordGeneratorOptions } from './passwordGenerator';

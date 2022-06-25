@@ -1,5 +1,5 @@
 import { cleanApplication } from '$lib/util';
-import { derived, get } from 'svelte/store';
+import { derived } from 'svelte/store';
 import { writable } from 'svelte/store';
 import { v4 } from 'uuid';
 import { remoteStorage } from '../remoteStorage';

@@ -5,7 +5,7 @@ const tasksWritable = writable(0);
 export const tasks = derived(tasksWritable, (state) => state);
 export const loading = derived(tasksWritable, (state) => state !== 0);
 
-export function wrap<T>(promise: Promise<T>): Promise<T> {
+export async function wrap<T>(promise: Promise<T>): Promise<T> {
 	addTask();
 	return promise.finally(removeTask);
 }

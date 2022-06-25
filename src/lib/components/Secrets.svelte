@@ -47,9 +47,13 @@
 	);
 
 	let password = '';
+	let passwordConfirmation = '';
 	let passwordMessages: string[] = [];
 	function onSetPassword() {
 		try {
+			if (password !== passwordConfirmation) {
+				throw new Error('Password confirmation does not match');
+			}
 			setPassword(password);
 			passwordMessages = [];
 			askingForPassword.set(false);
@@ -84,6 +88,7 @@
 	<h3 slot="title" class="as-text-lg">Enter Master Password</h3>
 	<form on:submit|preventDefault autocomplete="off">
 		<SimplePassword bind:password />
+		<SimplePassword bind:password={passwordConfirmation} placeholder="Re-Enter Password" />
 		<InputErrors messages={passwordMessages} />
 		<div class="as-flex as-justify-end as-mt-2">
 			<input

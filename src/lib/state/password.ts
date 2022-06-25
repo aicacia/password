@@ -1,10 +1,7 @@
 import * as openpgp from 'openpgp';
 import ee3 from 'eventemitter3';
 import { derived, get, writable } from 'svelte/store';
-import { SHA256, enc } from 'crypto-js';
 import { remoteStorage } from '$lib/remoteStorage';
-
-const CHECKED_MS = 1000 * 60 * 60 * 24;
 
 interface IEmitter {
 	password(password: string): void;
@@ -20,25 +17,14 @@ export const password = derived(passwordWritable, (state) => state);
 export const askingForPassword = writable(false);
 
 export function setPassword(password: string) {
-	const storedPassword = localStorage.getItem('password');
-	const passwordHash = SHA256(password).toString(enc.Hex);
-
-	if (!storedPassword || storedPassword === passwordHash) {
-		localStorage.setItem('password', passwordHash);
-		localStorage.setItem('last-checked', Date.now().toString());
-		passwordWritable.set(passwordHash);
-		emitter.emit('password', passwordHash);
-	} else {
-		emitter.emit('error', new Error("Password doesn't not match"));
-	}
+	passwordWritable.set(password);
+	emitter.emit('password', password);
 }
 
 export function clearPassword() {
-	localStorage.removeItem('password');
 	passwordWritable.set(null);
 }
 
-remoteStorage.on('connected', waitForPassword);
 remoteStorage.on('disconnected', clearPassword);
 
 export function cancelAskingForPassword() {
@@ -90,23 +76,5 @@ export async function decryptSecret(encryptedSecret: string) {
 	} catch (e) {
 		passwordWritable.set(null);
 		throw e;
-	}
-}
-
-if (typeof window !== 'undefined') {
-	const storedPassword = localStorage.getItem('password');
-	const lastedChecked = localStorage.getItem('last-checked');
-	let canFetch = false;
-	if (lastedChecked) {
-		const date = new Date(lastedChecked);
-		if (date.getTime() + CHECKED_MS < Date.now()) {
-			canFetch = false;
-			askingForPassword.set(true);
-		} else {
-			canFetch = true;
-		}
-	}
-	if (canFetch && storedPassword) {
-		passwordWritable.set(storedPassword);
 	}
 }
