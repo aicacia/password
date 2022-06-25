@@ -18,7 +18,12 @@ const config = {
 		csp: {
 			mode: 'hash',
 			directives: {
-				'default-src': ['self', 'https://api.dropboxapi.com', 'https://www.googleapis.com'],
+				'default-src': [
+					'self',
+					'https://api.dropboxapi.com',
+					'https://content.dropboxapi.com',
+					'https://www.googleapis.com'
+				],
 				'style-src': ['self', 'unsafe-inline']
 			}
 		},
