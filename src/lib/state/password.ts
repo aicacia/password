@@ -9,16 +9,15 @@ interface IEmitter {
 	error(error: Error): void;
 }
 
-const emitter = new ee3.EventEmitter<IEmitter>();
-
-const passwordWritable = writable<string | null>(null);
+export const passwordEmitter = new ee3.EventEmitter<IEmitter>();
+export const passwordWritable = writable<string | null>(null);
 
 export const password = derived(passwordWritable, (state) => state);
 export const askingForPassword = writable(false);
 
 export function setPassword(password: string) {
 	passwordWritable.set(password);
-	emitter.emit('password', password);
+	passwordEmitter.emit('password', password);
 }
 
 export function clearPassword() {
@@ -28,7 +27,7 @@ export function clearPassword() {
 remoteStorage.on('disconnected', clearPassword);
 
 export function cancelAskingForPassword() {
-	emitter.emit('cancel');
+	passwordEmitter.emit('cancel');
 	askingForPassword.set(false);
 }
 
@@ -39,11 +38,11 @@ export async function waitForPassword() {
 			resolve(currentPassowrd);
 		} else {
 			askingForPassword.set(true);
-			emitter.once('password', resolve);
-			emitter.once('cancel', () => {
+			passwordEmitter.once('password', resolve);
+			passwordEmitter.once('cancel', () => {
 				reject(new Error('Cancelled'));
 			});
-			emitter.once('error', reject);
+			passwordEmitter.once('error', reject);
 		}
 	});
 }

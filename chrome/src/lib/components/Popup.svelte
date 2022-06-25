@@ -15,6 +15,18 @@
 		chrome.runtime.sendMessage([SIGN_OUT_MSG_ID]);
 	}
 
+	function getPassword(): Promise<string> {
+		return chrome.storage.local.get(['password']).then(({ password }) => password);
+	}
+
+	function setPassword(password: string) {
+		return chrome.storage.local.set({ password });
+	}
+
+	function clearPassword() {
+		return chrome.storage.local.remove(['password']);
+	}
+
 	function onReady() {
 		chrome.storage.local
 			.get(['provider', 'userAddress', 'token'])
@@ -29,7 +41,13 @@
 	}
 
 	remoteStorage.on('ready', onReady);
-	remoteStorage.on('disconnected', signOut);
+	remoteStorage.on('disconnected', () => {
+		signOut();
+		clearPassword();
+	});
+
+	passwordEmitter.on('password', setPassword);
+	getPassword().then(passwordWritable.set);
 </script>
 
 <script lang="ts">
@@ -37,6 +55,7 @@
 	import Secrets from '@aicacia/secrets/components/Secrets.svelte';
 	import Layout from '@aicacia/secrets/components/Layout.svelte';
 	import { remoteStorageState } from '@aicacia/secrets/state/remoteStorageState';
+	import { passwordEmitter, passwordWritable } from '@aicacia/secrets/state/password';
 	import { remoteStorage } from '@aicacia/secrets/remoteStorage';
 	import { cleanApplication } from '@aicacia/secrets/util';
 	import type Widget from 'remotestorage-widget';
