@@ -39,7 +39,7 @@
 	const debouncedUpdate = debounce(onUpdate, 1000);
 </script>
 
-<div class="as-flex as-flex-row as-w-full as-mb-2">
+<form class="as-flex as-flex-row as-w-full as-mb-2" on:submit|preventDefault autocomplete="off">
 	<div class="as-flex-grow-0 as-mr-2">
 		<button class="as-btn as-danger as-p-1" on:click={onDeleteInternal}
 			><div class="as-w-6 as-h-6"><MdClose /></div></button
@@ -50,6 +50,7 @@
 			class="as-input"
 			type="text"
 			placeholder="Username"
+			autocomplete="off"
 			bind:value={secret.username}
 			on:input={debouncedUpdate}
 		/>
@@ -69,4 +70,4 @@
 			<EncryptedPassword {onShow} />
 		{/if}
 	</div>
-</div>
+</form>

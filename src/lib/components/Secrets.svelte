@@ -82,7 +82,7 @@
 
 <Modal bind:open={$askingForPassword} onClose={cancelAskingForPassword}>
 	<h3 slot="title" class="as-text-lg">Enter Master Password</h3>
-	<form on:submit|preventDefault>
+	<form on:submit|preventDefault autocomplete="off">
 		<SimplePassword bind:password />
 		<InputErrors messages={passwordMessages} />
 		<div class="as-flex as-justify-end as-mt-2">

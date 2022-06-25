@@ -15,6 +15,12 @@ const config = {
 		paths: {
 			base: process.env.USE_BASE_PATH ? '/secrets' : ''
 		},
+		csp: {
+			mode: 'hash',
+			directives: {
+				'default-src': ['self', 'https://api.dropboxapi.com', 'https://www.googleapis.com']
+			}
+		},
 		prerender: {
 			default: true
 		}
